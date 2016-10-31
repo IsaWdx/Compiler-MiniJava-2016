@@ -33,6 +33,8 @@ expression:         expression op=( '&&' | '<' | '+' | '-' | '*' ) expression
           ;
 identifier:         IDENTIFIER ;
 
+COMMENTI:           '//' .*? '\n' -> skip ;
+COMMENTII:          '/*' .*? '*/' -> skip ;
 IDENTIFIER:         [a-zA-Z_][a-zA-Z0-9_]* ;
 INTEGER_LITERAL:    [0-9]+ ;
 WS:                 [ \t\r\n]+ -> skip ;
