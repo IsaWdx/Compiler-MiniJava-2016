@@ -29,10 +29,12 @@ intexpression:      intexpression op=( '+' | '-' | '*' | '/' ) intexpression
              |      '(' intexpression ')'
              ;
 booleanexpression:  booleanexpression op=('&&' | '||' | '==' | '!=') booleanexpression
-                 |  intexpression op=('>' | '<' | '>=' | '<=' | '==' | '!=') intexpression
+                 |  intexpression op=('>' | '<' | '>=' | '<=' | '==' | '!=' | '&&' | '||') intexpression
+                 |  intexpression op=('&&' | '||') booleanexpression
+                 |  booleanexpression op=('&&' | '||') intexpression
                  |  'true'
                  |  'false'
-                 |  '!' booleanexpression
+                 |  '!' (intexpression|booleanexpression)
                  |  '(' booleanexpression ')'
                  ;
 identifier:         IDENTIFIER ;
