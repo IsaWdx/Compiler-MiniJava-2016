@@ -11,8 +11,8 @@ type:               (('int' '[' ']')
     |               identifier)
     ;
 statement:          '{' statement* '}'
-         |          'if' '(' booleanexpression ')' statement ('else' statement)?
-         |          'while' '(' booleanexpression ')' statement
+         |          'if' '(' (intexpression|booleanexpression) ')' statement ('else' statement)?
+         |          'while' '(' (intexpression|booleanexpression) ')' statement
          |          'System.out.println' '(' (intexpression|booleanexpression) ')' ';'
          |          identifier '=' (intexpression|booleanexpression) ';'
          |          identifier '[' intexpression ']' '=' intexpression ';'

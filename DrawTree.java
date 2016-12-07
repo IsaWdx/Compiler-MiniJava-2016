@@ -8,8 +8,8 @@ import java.util.Arrays;
 
 public class DrawTree {
     public static void main(String[] args) throws Exception {
-        FileInputStream text = new FileInputStream("D:\\Study\\compiler\\src\\Factorial.txt");
-        //FileInputStream text = new FileInputStream("/Users/xuan/Documents/Compiler-MiniJava-2016/Factorial.txt");
+        //FileInputStream text = new FileInputStream("D:\\Study\\compiler\\src\\Factorial.txt");
+        FileInputStream text = new FileInputStream("/Users/xuan/Documents/Compiler-MiniJava-2016/binarysearch.txt");
         ANTLRInputStream input = new ANTLRInputStream(text);
         MiniJavaLexer lexer = new MiniJavaLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
