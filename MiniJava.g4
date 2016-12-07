@@ -17,7 +17,8 @@ statement:          '{' statement* '}'
          |          identifier '=' (intexpression|booleanexpression) ';'
          |          identifier '[' intexpression ']' '=' intexpression ';'
          ;
-intexpression:      intexpression op=( '+' | '-' | '*' | '/' ) intexpression
+intexpression:      intexpression op=( '*' | '/' ) intexpression
+             |      intexpression op=( '+' | '-' ) intexpression
              |      intexpression '[' intexpression ']'
              |      intexpression '.' 'length'
              |      intexpression '.' identifier '(' ( (intexpression|booleanexpression) ( ',' (intexpression|booleanexpression) )* )? ')'
@@ -28,10 +29,16 @@ intexpression:      intexpression op=( '+' | '-' | '*' | '/' ) intexpression
              |      'new' identifier '(' ')'
              |      '(' intexpression ')'
              ;
-booleanexpression:  booleanexpression op=('&&' | '||' | '==' | '!=') booleanexpression
-                 |  intexpression op=('>' | '<' | '>=' | '<=' | '==' | '!=' | '&&' | '||') intexpression
-                 |  intexpression op=('&&' | '||') booleanexpression
-                 |  booleanexpression op=('&&' | '||') intexpression
+booleanexpression:  booleanexpression '&&' booleanexpression
+                 |  booleanexpression '||' booleanexpression
+                 |  booleanexpression op=( '==' | '!=' ) booleanexpression
+                 |  intexpression '&&' intexpression
+                 |  intexpression '||' intexpression
+                 |  intexpression op=( '>' | '<' | '>=' | '<=' | '==' | '!=' ) intexpression
+                 |  intexpression '&&' booleanexpression
+                 |  intexpression '||' booleanexpression
+                 |  booleanexpression '&&' intexpression
+                 |  booleanexpression '||' intexpression
                  |  'true'
                  |  'false'
                  |  '!' (intexpression|booleanexpression)
@@ -39,8 +46,20 @@ booleanexpression:  booleanexpression op=('&&' | '||' | '==' | '!=') booleanexpr
                  ;
 identifier:         IDENTIFIER ;
 
+MULTI:              '*';
+DVIDE:              '/';
+ADD:                '+';
+MINUS:              '-';
+EQUAL:              '==';
+N_EQL:              '!=';
+LRGER:              '>';
+SMLLR:              '<';
+L_EQL:              '>=';
+S_EQL:              '<=';
+
 COMMENTI:           '//' .*? '\n' -> skip ;
 COMMENTII:          '/*' .*? '*/' -> skip ;
 IDENTIFIER:         [a-zA-Z_][a-zA-Z0-9_]* ;
 INTEGER_LITERAL:    [0-9]+ ;
 WS:                 [ \t\r\n]+ -> skip ;
+
