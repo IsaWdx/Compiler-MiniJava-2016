@@ -4,33 +4,37 @@ goal:               mainClass classDeclaration* ;
 mainClass:          'class' identifier '{' 'public' 'static' 'void' 'main' '(' 'String' '[' ']' identifier ')' '{' statement '}' '}' ;
 classDeclaration:   'class' identifier ( 'extends' identifier )? '{' varDeclaration* methodDeclaration* '}' ;
 varDeclaration:     type identifier ';' ;
-methodDeclaration:  'public' type identifier '(' ( type identifier ( ',' type identifier )* )? ')' '{' varDeclaration* statement* 'return' expression ';' '}' ;
+methodDeclaration:  'public' type identifier '(' ( type identifier ( ',' type identifier )* )? ')' '{' varDeclaration* statement* 'return' (intexpression|booleanexpression) ';' '}' ;
 type:               (('int' '[' ']')
     |               'boolean'
     |               'int'
     |               identifier)
     ;
 statement:          '{' statement* '}'
-         |          'if' '(' expression ')' statement ('else' statement)?
-         |          'while' '(' expression ')' statement
-         |          'System.out.println' '(' expression ')' ';'
-         |          identifier '=' expression ';'
-         |          identifier '[' expression ']' '=' expression ';'
+         |          'if' '(' booleanexpression ')' statement ('else' statement)?
+         |          'while' '(' booleanexpression ')' statement
+         |          'System.out.println' '(' (intexpression|booleanexpression) ')' ';'
+         |          identifier '=' (intexpression|booleanexpression) ';'
+         |          identifier '[' intexpression ']' '=' intexpression ';'
          ;
-expression:         expression op=( '&&' | '<' | '+' | '-' | '*' ) expression
-          |         expression '[' expression ']'
-          |         expression '.' 'length'
-          |         expression '.' identifier '(' ( expression ( ',' expression )* )? ')'
-          |         INTEGER_LITERAL
-          |         'true'
-          |         'false'
-          |         identifier
-          |         'this'
-          |         'new' 'int' '[' expression ']'
-          |         'new' identifier '(' ')'
-          |         '!' expression
-          |         '(' expression ')'
-          ;
+intexpression:      intexpression op=( '+' | '-' | '*' | '/' ) intexpression
+             |      intexpression '[' intexpression ']'
+             |      intexpression '.' 'length'
+             |      intexpression '.' identifier '(' ( (intexpression|booleanexpression) ( ',' (intexpression|booleanexpression) )* )? ')'
+             |      INTEGER_LITERAL
+             |      identifier
+             |      'this'
+             |      'new' 'int' '[' intexpression ']'
+             |      'new' identifier '(' ')'
+             |      '(' intexpression ')'
+             ;
+booleanexpression:  booleanexpression op=('&&' | '||' | '==' | '!=') booleanexpression
+                 |  intexpression op=('>' | '<' | '>=' | '<=' | '==' | '!=') intexpression
+                 |  'true'
+                 |  'false'
+                 |  '!' booleanexpression
+                 |  '(' booleanexpression ')'
+                 ;
 identifier:         IDENTIFIER ;
 
 COMMENTI:           '//' .*? '\n' -> skip ;
