@@ -1,48 +1,48 @@
 grammar MiniJava;
 
 goal:               mainClass classDeclaration* ;
-mainClass:          'class' identifier '{' 'public' 'static' 'void' 'main' '(' 'String' '[' ']' identifier ')' '{' statement '}' '}' ;
+mainClass:          'class' identifier '{' 'public' 'static' 'void' 'main' '(' 'String' '[' ']' identifier ')' '{' statement '}' '}' ; 
 classDeclaration:   'class' identifier ( 'extends' identifier )? '{' varDeclaration* methodDeclaration* '}' ;
 varDeclaration:     type identifier ';' ;
 methodDeclaration:  'public' type identifier '(' ( type identifier ( ',' type identifier )* )? ')' '{' varDeclaration* statement* 'return' (intexpression|booleanexpression) ';' '}' ;
-type:               (('int' '[' ']')
-    |               'boolean'
-    |               'int'
-    |               identifier)
+type:               ('int' '[' ']')      #arrayType
+    |               'boolean'             #booleanType
+    |               'int'                 #intType
+    |               identifier           #identifierType
     ;
-statement:          '{' statement* '}'
-         |          'if' '(' (intexpression|booleanexpression) ')' statement ('else' statement)?
-         |          'while' '(' (intexpression|booleanexpression) ')' statement
-         |          'System.out.println' '(' (intexpression|booleanexpression) ')' ';'
-         |          identifier '=' (intexpression|booleanexpression) ';'
-         |          identifier '[' intexpression ']' '=' intexpression ';'
+statement:          '{' statement* '}'    #braceStatement
+         |          'if' '(' (intexpression|booleanexpression) ')' statement ('else' statement)?	#ifStatement
+         |          'while' '(' (intexpression|booleanexpression) ')' statement						#whileStatement
+         |          'System.out.println' '(' (intexpression|booleanexpression) ')' ';'				#printStatement
+         |          identifier '=' (intexpression|booleanexpression) ';'							#assignStatement
+         |          identifier '[' intexpression ']' '=' intexpression ';'							#assignArrayStatement
          ;
-intexpression:      intexpression op=( '*' | '/' ) intexpression
-             |      intexpression op=( '+' | '-' ) intexpression
-             |      intexpression '[' intexpression ']'
-             |      intexpression '.' 'length'
-             |      intexpression '.' identifier '(' ( (intexpression|booleanexpression) ( ',' (intexpression|booleanexpression) )* )? ')'
-             |      INTEGER_LITERAL
-             |      identifier
-             |      'this'
-             |      'new' 'int' '[' intexpression ']'
-             |      'new' identifier '(' ')'
-             |      '(' intexpression ')'
+intexpression:      intexpression op=( '*' | '/' ) intexpression	#mulInt
+             |      intexpression op=( '+' | '-' ) intexpression	#addInt
+             |      intexpression '[' intexpression ']'				#arrayInt
+             |      intexpression '.' 'length'						#lengthInt
+             |      intexpression '.' identifier '(' ( (intexpression|booleanexpression) ( ',' (intexpression|booleanexpression) )* )? ')'	#methodInt
+             |      INTEGER_LITERAL									#literalInt
+             |      identifier										#identifierInt
+             |      'this'											#thisInt
+             |      'new' 'int' '[' intexpression ']'				#newArrayInt
+             |      'new' identifier '(' ')'						#newIdentifierInt
+             |      '(' intexpression ')'							#parenInt
              ;
-booleanexpression:  booleanexpression '&&' booleanexpression
-                 |  booleanexpression '||' booleanexpression
-                 |  booleanexpression op=( '==' | '!=' ) booleanexpression
-                 |  intexpression '&&' intexpression
-                 |  intexpression '||' intexpression
-                 |  intexpression op=( '>' | '<' | '>=' | '<=' | '==' | '!=' ) intexpression
-                 |  intexpression '&&' booleanexpression
-                 |  intexpression '||' booleanexpression
-                 |  booleanexpression '&&' intexpression
-                 |  booleanexpression '||' intexpression
-                 |  'true'
-                 |  'false'
-                 |  '!' (intexpression|booleanexpression)
-                 |  '(' booleanexpression ')'
+booleanexpression:  booleanexpression '&&' booleanexpression		#andbbBoolean
+                 |  booleanexpression '||' booleanexpression		#orbbBoolean
+                 |  booleanexpression op=( '==' | '!=' ) booleanexpression		#equalbbBoolean
+                 |  intexpression '&&' intexpression				#andiiBoolean
+                 |  intexpression '||' intexpression				#oriiBoolean
+                 |  intexpression op=( '>' | '<' | '>=' | '<=' | '==' | '!=' ) intexpression	#equaliiBoolean
+                 |  intexpression '&&' booleanexpression			#andibBoolean
+                 |  intexpression '||' booleanexpression			#oribBoolean
+                 |  booleanexpression '&&' intexpression			#andbiBoolean
+                 |  booleanexpression '||' intexpression			#orbiBoolean
+                 |  'true'											#trueBoolean
+                 |  'false'											#falseBoolean	
+                 |  '!' (intexpression|booleanexpression)			#notBoolean
+                 |  '(' booleanexpression ')'						#parenBoolean
                  ;
 identifier:         IDENTIFIER ;
 
