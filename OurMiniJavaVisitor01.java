@@ -7,6 +7,8 @@ public class OurMiniJavaVisitor01 extends MiniJavaBaseVisitor<Integer> {
     public Integer visitVarDeclaration(MiniJavaParser.VarDeclarationContext ctx) {
         int type = visit(ctx.type());
         String varname = ctx.identifier().getText();
+        int linenum = ctx.identifier().getStart().getLine();
+        int charnum = ctx.identifier().getStart().getCharPositionInLine();
         if(type != OurConstants.identifierType) {
             // identifierType 的情形只能放到第二轮去解决
             // ctx.getParent().depth()
@@ -15,12 +17,14 @@ public class OurMiniJavaVisitor01 extends MiniJavaBaseVisitor<Integer> {
                 String classname = ctx.getParent().getParent().getChild(1).getText();
                 String methodname = ctx.getParent().getChild(2).getText();
                 if(DrawTree.addVarDeclaration(classname + "." + methodname + "." + varname, type) == false) {
-                    DrawTree.publishErrorMessage("错误：重复定义变量。");
+                    DrawTree.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：重复定义变量。");
+                    DrawTree.publicErrorLine(linenum, charnum, charnum + varname.length());
                 }
             } else {
                 String classname = ctx.getParent().getChild(1).getText();
                 if(DrawTree.addVarDeclaration(classname + "." + varname, type) == false) {
-                    DrawTree.publishErrorMessage("错误：重复定义变量。");
+                    DrawTree.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：重复定义变量。");
+                    DrawTree.publicErrorLine(linenum, charnum, charnum + varname.length());
                 }
             }
         }
