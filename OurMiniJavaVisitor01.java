@@ -5,6 +5,15 @@ public class OurMiniJavaVisitor01 extends MiniJavaBaseVisitor<Integer> {
     // in normal cases, functions should return an integer or null
 
     @Override
+    public Integer visitMethodInt(MiniJavaParser.MethodIntContext ctx) {
+        List<ParseTree> children = ctx.children;
+        for(int i = 0; i < children.size(); i++) {
+            //System.out.println(children.get(i).getText());
+        }
+        return visitChildren(ctx);
+    }
+
+    @Override
     public Integer visitMethodDeclaration(MiniJavaParser.MethodDeclarationContext ctx) {
         // 第一轮记录return type，第二轮验证 & more
         String returntype = ctx.type(0).getText();
