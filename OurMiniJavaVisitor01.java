@@ -4,6 +4,18 @@ public class OurMiniJavaVisitor01 extends MiniJavaBaseVisitor<Integer> {
     // in normal cases, functions should return an integer or null
 
     @Override
+    public Integer visitClassDeclaration(MiniJavaParser.ClassDeclarationContext ctx) {
+        String classname = ctx.getChild(1).getText();
+        int linenum = ctx.identifier(0).getStart().getLine();
+        int charnum = ctx.identifier(0).getStart().getCharPositionInLine();
+        if(DrawTree.addClassDeclaration(classname) == false) {
+            DrawTree.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：重名的类。");
+            DrawTree.publicErrorLine(linenum, charnum, charnum + classname.length());
+        }
+        return visitChildren(ctx);
+    }
+
+    @Override
     public Integer visitVarDeclaration(MiniJavaParser.VarDeclarationContext ctx) {
         int type = visit(ctx.type());
         String varname = ctx.identifier().getText();

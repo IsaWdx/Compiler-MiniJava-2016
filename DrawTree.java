@@ -9,7 +9,16 @@ import java.util.*;
 public class DrawTree {
     private static boolean hasError = false;
     private static Map<String, Integer> typeMap = new HashMap<String, Integer>();
+    private static Set<String> classSet = new HashSet<String>();
     private static List<String> rawCodes = new ArrayList<String>();
+
+    public static boolean addClassDeclaration(String name) {
+        if(classSet.contains(name)) {
+            return false;
+        }
+        classSet.add(name);
+        return true;
+    }
 
     public static boolean addVarDeclaration(String name, Integer type) {
         if(typeMap.containsKey(name)) {

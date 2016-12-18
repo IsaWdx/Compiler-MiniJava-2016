@@ -8,6 +8,10 @@ class BinarySearch{
 // using Binary Search
 
 class BS{
+    //
+}
+
+class BS{
     int[] number ;
     int size ;
 
