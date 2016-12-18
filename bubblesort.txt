@@ -28,7 +28,7 @@ class BBS{
 	return 0 ;
     }
 
-    public int Sort(int a){
+    public int [ ] Sort(int a){
 		return 0;
 	}
     
@@ -41,6 +41,7 @@ class BBS{
 	int aux05 ;
 	int aux06 ;
 	int aux07 ;
+	int [] useless;
 	int j ;
 	int t ;
 	i = size - 1 ;

@@ -9,10 +9,19 @@ import java.util.*;
 public class DrawTree {
     private static boolean hasError = false;
     private static Map<String, Integer> typeMap = new HashMap<String, Integer>();
+    private static Map<String, String> varTypeMap = new HashMap<String, String>();
     private static Map<String, String> returnTypeMap = new HashMap<String, String>();
     private static Set<String> classSet = new HashSet<String>();
     private static List<String> rawCodes = new ArrayList<String>();
 
+    public static boolean storeVarType(String name, String type) {
+        if(varTypeMap.containsKey(name)) {
+            return false;
+        }
+        varTypeMap.put(name, type);
+        return true;
+    }
+    
     public static boolean storeReturnType(String name, String type) {
         if(returnTypeMap.containsKey(name)) {
             return false;

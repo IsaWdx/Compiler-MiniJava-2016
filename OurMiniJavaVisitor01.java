@@ -7,7 +7,7 @@ public class OurMiniJavaVisitor01 extends MiniJavaBaseVisitor<Integer> {
     @Override
     public Integer visitMethodDeclaration(MiniJavaParser.MethodDeclarationContext ctx) {
         // 第一轮记录return type，第二轮验证 & more
-        String returntype = ctx.type(0).getStart().getText();
+        String returntype = ctx.type(0).getText();
         String methodname = ctx.identifier(0).getStart().getText();
         String classname = ctx.getParent().getChild(1).getText();
         String methodSignature = classname + "." + methodname + "(";
@@ -61,16 +61,17 @@ public class OurMiniJavaVisitor01 extends MiniJavaBaseVisitor<Integer> {
             // identifierType 的情形只能放到第二轮去解决
             // ctx.getParent().depth()
             // 根据我们的语法，depth为2为class中的成员变量，为3则为func中的变量
+            String typename = ctx.type().getText();
             if(ctx.getParent().depth() == 3) {
                 String classname = ctx.getParent().getParent().getChild(1).getText();
                 String methodname = ctx.getParent().getChild(2).getText();
-                if(DrawTree.addVarDeclaration(classname + "." + methodname + "." + varname, type) == false) {
+                if(DrawTree.addVarDeclaration(classname + "." + methodname + "." + varname, type) && DrawTree.storeVarType(classname + "." + methodname + "." + varname, typename) == false) {
                     DrawTree.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：重复定义变量");
                     DrawTree.publicErrorLine(linenum, charnum, charnum + varname.length());
                 }
             } else {
                 String classname = ctx.getParent().getChild(1).getText();
-                if(DrawTree.addVarDeclaration(classname + "." + varname, type) == false) {
+                if(DrawTree.addVarDeclaration(classname + "." + varname, type) && DrawTree.storeVarType(classname + "." + varname, typename) == false) {
                     DrawTree.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：重复定义变量");
                     DrawTree.publicErrorLine(linenum, charnum, charnum + varname.length());
                 }

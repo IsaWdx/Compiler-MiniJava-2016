@@ -23,13 +23,13 @@ public class OurMiniJavaVisitor02 extends MiniJavaBaseVisitor<Integer> {
             if(ctx.getParent().depth() == 3) {
                 String classname = ctx.getParent().getParent().getChild(1).getText();
                 String methodname = ctx.getParent().getChild(2).getText();
-                if(DrawTree.addVarDeclaration(classname + "." + methodname + "." + varname, type) == false) {
+                if(DrawTree.addVarDeclaration(classname + "." + methodname + "." + varname, type) && DrawTree.storeVarType(classname + "." + methodname + "." + varname, typename) == false) {
                     DrawTree.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：重复定义变量");
                     DrawTree.publicErrorLine(linenum, charnum, charnum + varname.length());
                 }
             } else {
                 String classname = ctx.getParent().getChild(1).getText();
-                if(DrawTree.addVarDeclaration(classname + "." + varname, type) == false) {
+                if(DrawTree.addVarDeclaration(classname + "." + varname, type) && DrawTree.storeVarType(classname + "." + varname, typename) == false) {
                     DrawTree.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：重复定义变量");
                     DrawTree.publicErrorLine(linenum, charnum, charnum + varname.length());
                 }
