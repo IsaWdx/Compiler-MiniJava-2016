@@ -10,6 +10,9 @@ class BubbleSort{
 // using Bublesort
 class BBS{
     
+    NO_USE hehe1 ;
+	//NO_USE hehe1 ;
+	//NOOUSE hehe2 ;
     int[] number ;
     int size ;
 
@@ -90,4 +93,8 @@ class BBS{
 	return 0 ;	
     }
 
+}
+
+class NO_USE {
+	// ...
 }

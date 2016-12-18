@@ -20,6 +20,10 @@ public class DrawTree {
         return true;
     }
 
+    public static boolean classExist(String name) {
+        return classSet.contains(name);
+    }
+
     public static boolean addVarDeclaration(String name, Integer type) {
         if(typeMap.containsKey(name)) {
             return false;
@@ -53,7 +57,8 @@ public class DrawTree {
     }
 
     public static void main(String[] args) throws Exception {
-        String inputfilename = "/Users/xuan/Documents/Compiler-MiniJava-2016/binarysearch.txt";
+        //String inputfilename = "/Users/xuan/Documents/Compiler-MiniJava-2016/binarysearch.txt";
+        String inputfilename = "/Users/xuan/Documents/Compiler-MiniJava-2016/bubblesort.txt";
         // read the whole file line by line in advance
         Scanner _s = new Scanner( new FileInputStream(inputfilename) );
         while(_s.hasNextLine()) {
@@ -70,6 +75,14 @@ public class DrawTree {
         //
         OurMiniJavaVisitor01 v1 = new OurMiniJavaVisitor01();
         v1.visit(tree);
+        
+        if(hasError) {
+            System.err.println("在执行后续步骤前，请先解决以上错误。");
+            return;
+        }
+        //
+        OurMiniJavaVisitor02 v2 = new OurMiniJavaVisitor02();
+        v2.visit(tree);
         
         if(hasError) {
             System.err.println("在执行后续步骤前，请先解决以上错误。");
