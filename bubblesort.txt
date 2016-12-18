@@ -28,7 +28,7 @@ class BBS{
 	return 0 ;
     }
 
-    public int Sort(){
+    public int Sort(int a){
 		return 0;
 	}
     

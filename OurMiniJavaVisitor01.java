@@ -1,4 +1,5 @@
-import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
+import org.antlr.v4.runtime.tree.*;
+import java.util.*;
 
 public class OurMiniJavaVisitor01 extends MiniJavaBaseVisitor<Integer> {
     // in normal cases, functions should return an integer or null
@@ -9,11 +10,30 @@ public class OurMiniJavaVisitor01 extends MiniJavaBaseVisitor<Integer> {
         String returntype = ctx.type(0).getStart().getText();
         String methodname = ctx.identifier(0).getStart().getText();
         String classname = ctx.getParent().getChild(1).getText();
-        //System.out.println(classname + "." + methodname + "#" + returntype);
-        if(DrawTree.storeReturnType(classname + "." + methodname, returntype) == false) {
+        String methodSignature = classname + "." + methodname + "(";
+        List<ParseTree> children = ctx.children;
+        int beginfrom = 0, endbefore = 0;
+        for(int i = 0; i < children.size(); i++) {
+            if(children.get(i).getText().equals("(")) {
+                beginfrom = i + 1;
+                break;
+            }
+        }
+        for(int i = 0; i < children.size(); i++) {
+            if(children.get(i).getText().equals(")")) {
+                endbefore = i;
+                break;
+            }
+        }
+        for(int i = beginfrom; i < endbefore; i = i + 2) {
+            methodSignature = methodSignature + children.get(i).getText() + ",";
+        }
+        //methodSignature = methodSignature.substring(0, methodSignature.length()-1) + ")";
+        //System.out.println(methodSignature);
+        if(DrawTree.storeReturnType(methodSignature, returntype) == false) {
             int lnumber = ctx.identifier(0).getStart().getLine();
             int cnumber = ctx.identifier(0).getStart().getCharPositionInLine();
-            DrawTree.publishErrorMessage("line " + Integer.toString(lnumber) + ":" + Integer.toString(cnumber) + " 错误：一个类中出现同名方法");
+            DrawTree.publishErrorMessage("line " + Integer.toString(lnumber) + ":" + Integer.toString(cnumber) + " 错误：类中出现相同签名的方法");
             DrawTree.publicErrorLine(lnumber, cnumber, cnumber + methodname.length());
         }
         return visitChildren(ctx);
