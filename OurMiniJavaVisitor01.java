@@ -4,6 +4,22 @@ public class OurMiniJavaVisitor01 extends MiniJavaBaseVisitor<Integer> {
     // in normal cases, functions should return an integer or null
 
     @Override
+    public Integer visitMethodDeclaration(MiniJavaParser.MethodDeclarationContext ctx) {
+        // 第一轮记录return type，第二轮验证 & more
+        String returntype = ctx.type(0).getStart().getText();
+        String methodname = ctx.identifier(0).getStart().getText();
+        String classname = ctx.getParent().getChild(1).getText();
+        //System.out.println(classname + "." + methodname + "#" + returntype);
+        if(DrawTree.storeReturnType(classname + "." + methodname, returntype) == false) {
+            int lnumber = ctx.identifier(0).getStart().getLine();
+            int cnumber = ctx.identifier(0).getStart().getCharPositionInLine();
+            DrawTree.publishErrorMessage("line " + Integer.toString(lnumber) + ":" + Integer.toString(cnumber) + " 错误：一个类中出现同名方法");
+            DrawTree.publicErrorLine(lnumber, cnumber, cnumber + methodname.length());
+        }
+        return visitChildren(ctx);
+    }
+
+    @Override
     public Integer visitClassDeclaration(MiniJavaParser.ClassDeclarationContext ctx) {
         String classname = ctx.getChild(1).getText();
         int linenum = ctx.identifier(0).getStart().getLine();

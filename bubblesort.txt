@@ -28,8 +28,11 @@ class BBS{
 	return 0 ;
     }
 
- 
-    // Sort array of integers using Bublesort method
+    public int Sort(){
+		return 0;
+	}
+    
+	// Sort array of integers using Bublesort method
     public int Sort(){
 	int nt ;
 	int i ;

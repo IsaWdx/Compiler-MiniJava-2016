@@ -9,8 +9,17 @@ import java.util.*;
 public class DrawTree {
     private static boolean hasError = false;
     private static Map<String, Integer> typeMap = new HashMap<String, Integer>();
+    private static Map<String, String> returnTypeMap = new HashMap<String, String>();
     private static Set<String> classSet = new HashSet<String>();
     private static List<String> rawCodes = new ArrayList<String>();
+
+    public static boolean storeReturnType(String name, String type) {
+        if(returnTypeMap.containsKey(name)) {
+            return false;
+        }
+        returnTypeMap.put(name, type);
+        return true;
+    }
 
     public static boolean addClassDeclaration(String name) {
         if(classSet.contains(name)) {
