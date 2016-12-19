@@ -1,6 +1,6 @@
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
-public class OurMiniJavaVisitor02 extends MiniJavaBaseVisitor<Integer> {
+public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
     // in normal cases, functions should return an integer or null
 
     @Override
@@ -18,7 +18,7 @@ public class OurMiniJavaVisitor02 extends MiniJavaBaseVisitor<Integer> {
                 int defcharnum = ctx.type().getStart().getCharPositionInLine();
                 DrawTree.publishErrorMessage("line " + Integer.toString(deflinenum) + ":" + Integer.toString(defcharnum) + " 错误：未定义的类型");
                 DrawTree.publicErrorLine(deflinenum, defcharnum, defcharnum + typename.length());
-                return null;
+                return OurConstants.identifierType;
             }
             if(ctx.getParent().depth() == 3) {
                 String classname = ctx.getParent().getParent().getChild(1).getText();
@@ -35,23 +35,6 @@ public class OurMiniJavaVisitor02 extends MiniJavaBaseVisitor<Integer> {
                 }
             }
         }
-        return null;
-    }
-
-    @Override
-    public Integer visitArrayType(MiniJavaParser.ArrayTypeContext ctx) {
-        return OurConstants.arrayType;
-    }
-    @Override
-    public Integer visitBooleanType(MiniJavaParser.BooleanTypeContext ctx) {
-        return OurConstants.booleanType;
-    }
-    @Override
-    public Integer visitIntType(MiniJavaParser.IntTypeContext ctx) {
-        return OurConstants.intType;
-    }
-    @Override
-    public Integer visitIdentifierType(MiniJavaParser.IdentifierTypeContext ctx) {
         return OurConstants.identifierType;
     }
 }

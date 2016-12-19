@@ -1,17 +1,8 @@
 import org.antlr.v4.runtime.tree.*;
 import java.util.*;
 
-public class OurMiniJavaVisitor01 extends MiniJavaBaseVisitor<Integer> {
+public class OurMiniJavaVisitor01 extends OurMiniJavaBaseVisitor {
     // in normal cases, functions should return an integer or null
-
-    @Override
-    public Integer visitMethodInt(MiniJavaParser.MethodIntContext ctx) {
-        List<ParseTree> children = ctx.children;
-        for(int i = 0; i < children.size(); i++) {
-            //System.out.println(children.get(i).getText());
-        }
-        return visitChildren(ctx);
-    }
 
     @Override
     public Integer visitMethodDeclaration(MiniJavaParser.MethodDeclarationContext ctx) {
@@ -86,23 +77,6 @@ public class OurMiniJavaVisitor01 extends MiniJavaBaseVisitor<Integer> {
                 }
             }
         }
-        return null;
-    }
-
-    @Override
-    public Integer visitArrayType(MiniJavaParser.ArrayTypeContext ctx) {
-        return OurConstants.arrayType;
-    }
-    @Override
-    public Integer visitBooleanType(MiniJavaParser.BooleanTypeContext ctx) {
-        return OurConstants.booleanType;
-    }
-    @Override
-    public Integer visitIntType(MiniJavaParser.IntTypeContext ctx) {
-        return OurConstants.intType;
-    }
-    @Override
-    public Integer visitIdentifierType(MiniJavaParser.IdentifierTypeContext ctx) {
-        return OurConstants.identifierType;
+        return type;
     }
 }
