@@ -104,6 +104,6 @@ class BBS {
 
 }
 
-class NO_USE {
+class NO_USE extends P{
 	// ...
 }
