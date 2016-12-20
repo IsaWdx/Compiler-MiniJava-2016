@@ -30,11 +30,11 @@ public class OurMiniJavaVisitor01 extends OurMiniJavaBaseVisitor {
         }
         //methodSignature = methodSignature.substring(0, methodSignature.length()-1) + ")";
         //System.out.println(methodSignature);
-        if(DrawTree.storeReturnType(methodSignature, returntype) == false) {
+        if(MiniJava.storeReturnType(methodSignature, returntype) == false) {
             int lnumber = ctx.identifier(0).getStart().getLine();
             int cnumber = ctx.identifier(0).getStart().getCharPositionInLine();
-            DrawTree.publishErrorMessage("line " + Integer.toString(lnumber) + ":" + Integer.toString(cnumber) + " 错误：类中出现相同签名的方法");
-            DrawTree.publicErrorLine(lnumber, cnumber, cnumber + methodname.length());
+            MiniJava.publishErrorMessage("line " + Integer.toString(lnumber) + ":" + Integer.toString(cnumber) + " 错误：类中出现相同签名的方法");
+            MiniJava.publicErrorLine(lnumber, cnumber, cnumber + methodname.length());
         }
         return visitChildren(ctx);
     }
@@ -42,11 +42,16 @@ public class OurMiniJavaVisitor01 extends OurMiniJavaBaseVisitor {
     @Override
     public Integer visitClassDeclaration(MiniJavaParser.ClassDeclarationContext ctx) {
         String classname = ctx.getChild(1).getText();
+        String parent = "";
+        //要查看是否循环继承，或者子类里有（祖）父类变量，或者父类里有子类变量
+        if(ctx.getChildCount()>=6 && ctx.getChild(2).getText().equals("extends")) {
+            parent = ctx.getChild(3).getChild(0).getText();
+        }
         int linenum = ctx.identifier(0).getStart().getLine();
         int charnum = ctx.identifier(0).getStart().getCharPositionInLine();
-        if(DrawTree.addClassDeclaration(classname) == false) {
-            DrawTree.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：重名的类");
-            DrawTree.publicErrorLine(linenum, charnum, charnum + classname.length());
+        if(MiniJava.addClassDeclaration(classname,parent) == false) {
+            MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：重名的类");
+            MiniJava.publicErrorLine(linenum, charnum, charnum + classname.length());
         }
         return visitChildren(ctx);
     }
@@ -65,15 +70,15 @@ public class OurMiniJavaVisitor01 extends OurMiniJavaBaseVisitor {
             if(ctx.getParent().depth() == 3) {
                 String classname = ctx.getParent().getParent().getChild(1).getText();
                 String methodname = ctx.getParent().getChild(2).getText();
-                if(DrawTree.addVarDeclaration(classname + "." + methodname + "." + varname, type) && DrawTree.storeVarType(classname + "." + methodname + "." + varname, typename) == false) {
-                    DrawTree.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：重复定义变量");
-                    DrawTree.publicErrorLine(linenum, charnum, charnum + varname.length());
+                if(MiniJava.addVarDeclaration(classname + "." + methodname + "." + varname, type)==false || MiniJava.storeVarType(classname + "." + methodname + "." + varname, typename) == false) {
+                    MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：重复定义变量");
+                    MiniJava.publicErrorLine(linenum, charnum, charnum + varname.length());
                 }
             } else {
                 String classname = ctx.getParent().getChild(1).getText();
-                if(DrawTree.addVarDeclaration(classname + "." + varname, type) && DrawTree.storeVarType(classname + "." + varname, typename) == false) {
-                    DrawTree.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：重复定义变量");
-                    DrawTree.publicErrorLine(linenum, charnum, charnum + varname.length());
+                if(MiniJava.addVarDeclaration(classname + "." + varname, type) && MiniJava.storeVarType(classname + "." + varname, typename) == false) {
+                    MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：重复定义变量");
+                    MiniJava.publicErrorLine(linenum, charnum, charnum + varname.length());
                 }
             }
         }

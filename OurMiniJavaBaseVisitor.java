@@ -1,4 +1,5 @@
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 public class OurMiniJavaBaseVisitor extends MiniJavaBaseVisitor<Integer> {
 	/**
@@ -272,5 +273,7 @@ public class OurMiniJavaBaseVisitor extends MiniJavaBaseVisitor<Integer> {
     public Integer visitIdentifierType(MiniJavaParser.IdentifierTypeContext ctx) {
         return OurConstants.identifierType;
     }
+
+
 }
 
