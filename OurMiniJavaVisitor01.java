@@ -12,6 +12,7 @@ public class OurMiniJavaVisitor01 extends OurMiniJavaBaseVisitor {
         String methodname = ctx.identifier(0).getStart().getText();
         String classname = ctx.getParent().getChild(1).getText();
         String methodSignature = classname + "." + methodname + "(";
+        String purename = classname + "." + methodname;
         List<ParseTree> children = ctx.children;
         int beginfrom = 0, endbefore = 0;
         for(int i = 0; i < children.size(); i++) {
@@ -35,7 +36,7 @@ public class OurMiniJavaVisitor01 extends OurMiniJavaBaseVisitor {
 
 
         //System.out.println(methodSignature);
-        if(MiniJava.storeReturnType(methodSignature, returntype) == false) {
+        if(MiniJava.storeReturnType(methodSignature, returntype, purename) == false) {
             int lnumber = ctx.identifier(0).getStart().getLine();
             int cnumber = ctx.identifier(0).getStart().getCharPositionInLine();
             MiniJava.publishErrorMessage("line " + Integer.toString(lnumber) + ":" + Integer.toString(cnumber) + " 错误：类中出现相同签名的方法");

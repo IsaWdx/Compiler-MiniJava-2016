@@ -1,4 +1,6 @@
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.HashSet;
 import java.util.List;
@@ -7,6 +9,61 @@ import java.util.Set;
 public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
     // in normal cases, functions should return an integer or null
 
+    @Override public Integer visitMethodInt(MiniJavaParser.MethodIntContext ctx) {
+        int returntype = -1;
+        String classname = "";
+        String methodname = "";
+        //check "this" as first
+        if (ctx.getChild(0).getText().equals("this")) {
+            int depth = ctx.depth();
+            ParserRuleContext parent = ctx.getParent();
+            for (;depth>2;depth--) {
+                classname = parent.getChild(1).getText();
+                parent = parent.getParent();
+            }
+            methodname = classname+"."+ctx.getChild(2).getText();
+            if(MiniJava.methodPureNameMap.get(methodname)== null){
+                int linenum = ctx.identifier().getStart().getLine();
+                int charnum = ctx.identifier().getStart().getCharPositionInLine();
+                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + "未定义的方法");
+                MiniJava.publicErrorLine(linenum, charnum, charnum + classname.length());
+            }
+
+            //System.out.println(methodname+"*"+MiniJava.returnTypeIntMap.get( MiniJava.methodPureNameMap.get(methodname)));
+            return MiniJava.returnTypeIntMap.get(methodname);
+
+        }
+        //visit first child, it may be a child node instead of pure identifier, like new BBS()
+        ParseTree c = ctx.getChild(0);
+        Integer result = c.accept(this);
+        classname = MiniJava.numberClassMap.get(result);
+
+        methodname = classname+"."+ctx.getChild(2).getText();
+        //System.out.println(methodname+" "+MiniJava.returnTypeIntMap.get(MiniJava.methodPureNameMap.get(methodname)));
+        //TODO：不过这里貌似因为语法检查，不会冒这个错误！！
+        if (MiniJava.returnTypeIntMap.get(MiniJava.methodPureNameMap.get(methodname))==null) {
+            int linenum = ctx.identifier().getStart().getLine();
+            int charnum = ctx.identifier().getStart().getCharPositionInLine();
+            MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + "未定义的方法");
+            MiniJava.publicErrorLine(linenum, charnum, charnum + classname.length());
+        }
+        else {
+            returntype = MiniJava.returnTypeIntMap.get(MiniJava.methodPureNameMap.get(methodname));
+        }
+        //在函数调用中 记录现在所在的位置处理this，然后找到他的定义位置，找到返回值
+        ParserRuleContext parent = ctx.getParent();
+        //System.out.println("return type "+returntype + " " + ctx.getChild(0).getText() +" "+ctx.getChild(2).getText());
+        return returntype;
+    }
+
+    @Override
+    public Integer visitNewIdentifierInt(MiniJavaParser.NewIdentifierIntContext ctx)
+    {
+        String returntype =ctx.getChild(1).getText();
+        //System.out.println(ctx.getChild(1).getText()+" : "+MiniJava.classNumberMap.get(ctx.getChild(1).getText()));
+        //System.out.println(MiniJava.classNumberMap.get(returntype));
+        return MiniJava.classNumberMap.get(returntype);
+    }
     @Override
     public Integer visitClassDeclaration(MiniJavaParser.ClassDeclarationContext ctx) {
         String classname = ctx.getChild(1).getText();

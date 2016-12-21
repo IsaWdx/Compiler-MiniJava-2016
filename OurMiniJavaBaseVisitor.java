@@ -1,3 +1,4 @@
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 import org.antlr.v4.runtime.tree.ParseTree;
 
@@ -82,14 +83,16 @@ public class OurMiniJavaBaseVisitor extends MiniJavaBaseVisitor<Integer> {
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitLengthInt(MiniJavaParser.LengthIntContext ctx) { return visitChildren(ctx); }
+	@Override public Integer visitLengthInt(MiniJavaParser.LengthIntContext ctx) { return  OurConstants.intType; }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitMethodInt(MiniJavaParser.MethodIntContext ctx) { return visitChildren(ctx); }
+	@Override public Integer visitMethodInt(MiniJavaParser.MethodIntContext ctx) {
+		return visitChildren(ctx);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
@@ -110,21 +113,21 @@ public class OurMiniJavaBaseVisitor extends MiniJavaBaseVisitor<Integer> {
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitMulInt(MiniJavaParser.MulIntContext ctx) { return visitChildren(ctx); }
+	@Override public Integer visitMulInt(MiniJavaParser.MulIntContext ctx) { return OurConstants.intType; }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitArrayInt(MiniJavaParser.ArrayIntContext ctx) { return visitChildren(ctx); }
+	@Override public Integer visitArrayInt(MiniJavaParser.ArrayIntContext ctx) { return  OurConstants.arrayType; }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitAddInt(MiniJavaParser.AddIntContext ctx) { return visitChildren(ctx); }
+	@Override public Integer visitAddInt(MiniJavaParser.AddIntContext ctx) { return OurConstants.intType; }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -138,14 +141,18 @@ public class OurMiniJavaBaseVisitor extends MiniJavaBaseVisitor<Integer> {
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitNewIdentifierInt(MiniJavaParser.NewIdentifierIntContext ctx) { return visitChildren(ctx); }
+	@Override public Integer visitNewIdentifierInt(MiniJavaParser.NewIdentifierIntContext ctx)
+	{
+
+		return visitChildren(ctx);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitNewArrayInt(MiniJavaParser.NewArrayIntContext ctx) { return visitChildren(ctx); }
+	@Override public Integer visitNewArrayInt(MiniJavaParser.NewArrayIntContext ctx) { return  OurConstants.arrayType; }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -264,7 +271,8 @@ public class OurMiniJavaBaseVisitor extends MiniJavaBaseVisitor<Integer> {
 
     @Override
     public Integer visitArrayType(MiniJavaParser.ArrayTypeContext ctx) {
-        return OurConstants.arrayType;
+		//System.out.println(ctx +" "+visitChildren(ctx));
+		return OurConstants.arrayType;
     }
     @Override
     public Integer visitBooleanType(MiniJavaParser.BooleanTypeContext ctx) {
