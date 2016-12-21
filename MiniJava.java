@@ -9,11 +9,11 @@ import java.util.*;
 public class MiniJava {
     private static boolean hasError = false;
     private static Map<String, Integer> typeMap = new HashMap<String, Integer>();
-    private static Map<String, String> varTypeMap = new HashMap<String, String>();
+    private static Map<String, String> varTypeMap = new HashMap<String, String>();//可能出现class的时候都得存
     private static Map<String, String> returnTypeMap = new HashMap<String, String>();
-    private static Map<String, String> classMap = new HashMap<String, String>();
+    public static Map<String, String> classMap = new HashMap<String, String>();
+    //TODO: How to check duplicate in different scope
     private static List<String> rawCodes = new ArrayList<String>();
-
     public static boolean storeVarType(String name, String type) {
         if(varTypeMap.containsKey(name)) {
             return false;
@@ -26,6 +26,7 @@ public class MiniJava {
         if(returnTypeMap.containsKey(name)) {
             return false;
         }
+        //System.out.println(name+" type "+type);
         returnTypeMap.put(name, type);
         return true;
     }
@@ -51,7 +52,7 @@ public class MiniJava {
     }
 
     public static void publicErrorLine(int linenum, int begincharnum, int endcharnum) {
-        System.out.println(rawCodes.get(linenum-1));
+        System.err.println(rawCodes.get(linenum-1));
         int tabcount = 0;
         for(int i = 0; i < rawCodes.get(linenum-1).length(); i++) {
             if(rawCodes.get(linenum-1).charAt(i) == '\t')
@@ -61,12 +62,12 @@ public class MiniJava {
         }
         int i = 0;
         for(i = 0; i < tabcount; i++)
-            System.out.print('\t');
+            System.err.print('\t');
         for(; i < begincharnum; i++)
-            System.out.print(' ');
+            System.err.print(' ');
         for(; i < endcharnum; i++)
-            System.out.print('^');
-        System.out.println();
+            System.err.print('^');
+        System.err.println();
     }
 
     public static void publishErrorMessage(String message) {
@@ -77,6 +78,7 @@ public class MiniJava {
     public static void main(String[] args) throws Exception {
         //String inputfilename = "/Users/xuan/Documents/Compiler-MiniJava-2016/binarysearch.txt";
         String inputfilename = "D:\\Study\\Coursera\\scala\\compiler\\src\\bubblesort.txt";
+        //String inputfilename = "/Users/xuan/Documents/Compiler-MiniJava-2016/bubblesort.txt";
         // read the whole file line by line in advance
         Scanner _s = new Scanner( new FileInputStream(inputfilename) );
         while(_s.hasNextLine()) {
@@ -93,9 +95,9 @@ public class MiniJava {
         //
         OurMiniJavaVisitor01 v1 = new OurMiniJavaVisitor01();
         v1.visit(tree);
-        // 这里检查是否循环继承
+        //
         if(hasError) {
-            System.err.println("在执行后续步骤前，请先解决以上错误。");
+            System.err.println("Please solve the above problems first");
             return;
         }
         //
@@ -103,7 +105,7 @@ public class MiniJava {
         v2.visit(tree);
 
         if(hasError) {
-            System.err.println("在执行后续步骤前，请先解决以上错误。");
+            System.err.println("Please solve the above problems first");
             return;
         }
        // DrawTree.drawPanel(parser, tree);

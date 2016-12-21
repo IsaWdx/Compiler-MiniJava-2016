@@ -36,7 +36,9 @@ public class OurMiniJavaBaseVisitor extends MiniJavaBaseVisitor<Integer> {
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitMethodDeclaration(MiniJavaParser.MethodDeclarationContext ctx) { return visitChildren(ctx); }
+	@Override public Integer visitMethodDeclaration(MiniJavaParser.MethodDeclarationContext ctx) {
+
+		return visitChildren(ctx); }
 	// ...
 	@Override public Integer visitBraceStatement(MiniJavaParser.BraceStatementContext ctx) { return visitChildren(ctx); }
 	/**
@@ -255,7 +257,10 @@ public class OurMiniJavaBaseVisitor extends MiniJavaBaseVisitor<Integer> {
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitIdentifier(MiniJavaParser.IdentifierContext ctx) { return visitChildren(ctx); }
+	@Override
+	public Integer visitIdentifier(MiniJavaParser.IdentifierContext ctx) {
+		//System.out.println(ctx);
+		return visitChildren(ctx); }
 
     @Override
     public Integer visitArrayType(MiniJavaParser.ArrayTypeContext ctx) {

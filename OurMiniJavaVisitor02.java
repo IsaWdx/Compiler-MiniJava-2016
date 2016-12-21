@@ -1,7 +1,42 @@
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
     // in normal cases, functions should return an integer or null
+
+    @Override
+    public Integer visitClassDeclaration(MiniJavaParser.ClassDeclarationContext ctx) {
+        String classname = ctx.getChild(1).getText();
+        String parent = "";
+        int linenum = ctx.identifier(0).getStart().getLine();
+        int charnum = ctx.identifier(0).getStart().getCharPositionInLine();
+        Set<String> ancesterSet = new HashSet<String>();
+        //要查看是否循环继承，或者子类里有（祖）父类变量，或者父类里有子类变量
+        if(ctx.getChildCount()>=6 && ctx.getChild(2).getText().equals("extends")) {
+            parent = ctx.getChild(3).getChild(0).getText();
+            if (MiniJava.classMap.containsKey(parent)) {
+                while(MiniJava.classMap.containsKey(parent)) {
+                    if (ancesterSet.contains(parent)) {
+                        MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：循环继承");
+                        MiniJava.publicErrorLine(linenum, charnum, charnum + classname.length());
+                        break;
+                    }
+                    ancesterSet.add(parent);
+                    parent = MiniJava.classMap.get(parent);
+                }
+            }
+            else {
+                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：未定义的父类");
+                MiniJava.publicErrorLine(linenum, charnum, charnum + classname.length());
+            }
+        }
+        return visitChildren(ctx);
+    }
+
+
 
     @Override
     public Integer visitVarDeclaration(MiniJavaParser.VarDeclarationContext ctx) {
