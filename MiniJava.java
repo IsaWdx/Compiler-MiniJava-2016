@@ -7,45 +7,23 @@ import java.io.FileInputStream;
 import java.util.*;
 
 public class MiniJava {
-    //TODO: 检查函数main是不是被其他地方调用了，是不是有其他胆子大的函数敢叫main
     private static boolean hasError = false;
-    private static Map<String, Integer> typeMap = new HashMap<String, Integer>();
-    private static Map<String, String> varTypeMap = new HashMap<String, String>();//可能出现class的时候都得存
-    public static Map<String, String> returnTypeMap = new HashMap<String, String>();//不应该这样存储name。调用的时候找不到返回值啊 因此改了下面
-    public static Map<String, String> methodPureNameMap = new HashMap<String, String>();//methodPurename 索引 MethodSignature, 另外他不允许虫子啊
-    // TODO: 检查如果出现重载的话 嫩死它
-    public static Map<String, Integer> returnTypeIntMap = new HashMap<String, Integer>();
-    public static Map<String, String> classMap = new HashMap<String, String>();
-    public static Map<Integer,String> numberClassMap = new HashMap<Integer, String>();//给class的identifier编号存起来
-    public static Map<String, Integer> classNumberMap = new HashMap<String, Integer>();
-    //由identifier找编号，或者由编号找identifier，关键是因为之前都返回了integer， >=4的都是class的identifier
+    //TODO: If there exists an error in parser/lexer, stop the program first
+    //During first round, store any type as integer as shown in Ourconstants class
+    //Assign each identifier with a number. when>=4, these are class identifier. 0,1,2,3, arew consistant with Ourconstants
+    public static Map<String, Integer> typeMap = new HashMap<String, Integer>();//variable
+    public static Map<String, Integer> returnTypeMap = new HashMap<String, Integer>();//method
+    public static Map<String, String> classMap = new HashMap<String, String>();//class -> parent class
+    public static Map<Integer,String> numberClassMap = new HashMap<Integer, String>();//find classname through number
+    public static Map<String, Integer> classNumberMap = new HashMap<String, Integer>();//vice versa
     public static Integer totalClassNumber = 0;
-    //TODO: How to check duplicate in different scope
+    //TODO: How to check reference of variables in parent scope(variable in method are defined in class)？
     private static List<String> rawCodes = new ArrayList<String>();
-    public static boolean storeVarType(String name, String type) {
-        if(varTypeMap.containsKey(name)) {
-            return false;
-        }
-        varTypeMap.put(name, type);
-        return true;
-    }
-
-    public static boolean storeReturnType(String name, String type, String purename) {
+    public static boolean storeReturnType(String name, Integer type) {
         if(returnTypeMap.containsKey(name)) {
             return false;
         }
-        //System.out.println(name+" type "+type);
         returnTypeMap.put(name, type);
-        Integer typeint = -1;
-        switch (type){
-            case "int": typeint = OurConstants.intType;break;
-            case "int[]": typeint = OurConstants.arrayType;break;
-            case "boolean": typeint = OurConstants.booleanType;break;
-            //no OurConstants.identifierType here
-        }
-        methodPureNameMap.put(purename, name);
-        //System.out.println("name: "+name);
-        returnTypeIntMap.put(name, typeint);
         return true;
     }
 
@@ -71,7 +49,6 @@ public class MiniJava {
         typeMap.put(name, type);
         return true;
     }
-
     public static void publicErrorLine(int linenum, int begincharnum, int endcharnum) {
         System.err.println(rawCodes.get(linenum - 1));
         int tabcount = 0;
@@ -90,12 +67,10 @@ public class MiniJava {
             System.err.print('^');
         System.err.println();
     }
-
     public static void publishErrorMessage(String message) {
         hasError = true;
         System.err.println(message);
     }
-
     public static void main(String[] args) throws Exception {
         //String inputfilename = "/Users/xuan/Documents/Compiler-MiniJava-2016/binarysearch.txt";
         String inputfilename = "D:\\Study\\Coursera\\scala\\compiler\\src\\bubblesort.txt";
@@ -114,6 +89,9 @@ public class MiniJava {
         MiniJavaParser parser = new MiniJavaParser(tokens);
         ParseTree tree = parser.goal();
         //
+        OurMiniJavaVisitor00 v0 = new OurMiniJavaVisitor00();
+        v0.visit(tree);
+        //
         OurMiniJavaVisitor01 v1 = new OurMiniJavaVisitor01();
         v1.visit(tree);
         //
@@ -129,8 +107,6 @@ public class MiniJava {
             System.err.println("Please solve the above problems first");
             return;
         }
-       // DrawTree.drawPanel(parser, tree);
-        //if (args.length > 0 && args[0].equals("-gui"))
         org.antlr.v4.gui.Trees.inspect(tree, parser);
     }
 

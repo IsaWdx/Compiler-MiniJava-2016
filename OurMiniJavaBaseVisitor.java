@@ -134,7 +134,7 @@ public class OurMiniJavaBaseVisitor extends MiniJavaBaseVisitor<Integer> {
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitLiteralInt(MiniJavaParser.LiteralIntContext ctx) { return visitChildren(ctx); }
+	@Override public Integer visitLiteralInt(MiniJavaParser.LiteralIntContext ctx) { return OurConstants.intType; }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -271,9 +271,7 @@ public class OurMiniJavaBaseVisitor extends MiniJavaBaseVisitor<Integer> {
 
     @Override
     public Integer visitArrayType(MiniJavaParser.ArrayTypeContext ctx) {
-		//System.out.println(ctx +" "+visitChildren(ctx));
-		return OurConstants.arrayType;
-    }
+		return OurConstants.arrayType;    }
     @Override
     public Integer visitBooleanType(MiniJavaParser.BooleanTypeContext ctx) {
         return OurConstants.booleanType;

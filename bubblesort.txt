@@ -11,7 +11,7 @@ class BubbleSort{
 // using Bublesort
 class P extends NO_USE{
 //System.out.println(new BBS().Sstart(10));
-}
+
     int pat;
 }
 
@@ -26,11 +26,11 @@ class BBS extends P{
     // Invoke the Initialization, Sort and Printing
     // Methods
     public int Start(int sz){
+
 	int aux01 ;
 	//int aux01 ;
 	aux01 = this.Init(sz);
 	aux01 = this.Print();
-	aus01 = this.aaaa();
 	System.out.println(99999);
 	aux01 = this.Sort();
 	aux01 = this.Print();
@@ -109,7 +109,7 @@ class BBS extends P{
 	number[7] = 9  ; 
 	number[8] = 19 ; 
 	number[9] = 5  ;
-	
+
 	return 0 ;	
     }
 

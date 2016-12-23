@@ -1,5 +1,6 @@
 public class OurConstants {
     // for different types
+    // Except main function, no other type named 'void'
     public static final Integer arrayType = 0;// String representation: int[]
     public static final Integer booleanType = 1;// String representation: boolean
     public static final Integer intType = 2;// String representation: int
