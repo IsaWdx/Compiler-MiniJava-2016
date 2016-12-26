@@ -285,7 +285,6 @@ public class OurMiniJavaBaseVisitor extends MiniJavaBaseVisitor<Integer> {
     public Integer visitIntType(MiniJavaParser.IntTypeContext ctx) {        return visitChildren(ctx);    }
     @Override
     public Integer visitIdentifierType(MiniJavaParser.IdentifierTypeContext ctx) {        return visitChildren(ctx); }
-//TODO: visitIdentifier wrong
 
 }
 

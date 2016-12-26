@@ -17,7 +17,6 @@ public class MiniJava {
     public static Map<Integer,String> numberClassMap = new HashMap<Integer, String>();//find classname through number
     public static Map<String, Integer> classNumberMap = new HashMap<String, Integer>();//vice versa
     public static Integer totalClassNumber = 0;
-    //TODO: How to check reference of variables in parent scope(variable in method are defined in class)��
     private static List<String> rawCodes = new ArrayList<String>();
     public static boolean storeReturnType(String name, Integer type) {
         if(returnTypeMap.containsKey(name)) {
@@ -76,7 +75,7 @@ public class MiniJava {
     }
     public static void main(String[] args) throws Exception {
         //String inputfilename = "/Users/xuan/Documents/Compiler-MiniJava-2016/binarysearch.txt";
-        String inputfilename = "D:\\Study\\Coursera\\scala\\compiler\\src\\binarysearch.txt";
+        String inputfilename = "D:\\Study\\Coursera\\scala\\compiler\\src\\factorial.txt";
         //String inputfilename = "/Users/xuan/Documents/Compiler-MiniJava-2016/bubblesort.txt";
         // read the whole file line by line in advance
         Scanner _s = new Scanner( new FileInputStream(inputfilename) );
