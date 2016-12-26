@@ -10,7 +10,7 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
     // in normal cases, functions should return an integer or null
 
     @Override public Integer visitMethodInt(MiniJavaParser.MethodIntContext ctx) {
-        int returntype = -1;
+        int returntype = OurConstants.illegalType;
         String classname = "";
         String methodname = "";
         String methodSignature = "";
@@ -25,11 +25,15 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
             //System.out.println(ctx.getText());
             methodSignature = classname + "." + ctx.getChild(2).getText() + "(";
             int count = ctx.getChildCount();
+            int linenum = ctx.identifier().getStart().getLine();
+            int charnum = ctx.identifier().getStart().getCharPositionInLine();
             for (int i  = 4; i< count-1; i=i+2){
                 ParseTree c = ctx.getChild(i);
                 Integer result = c.accept(this);
-                if(result == null){//TODO: 这里还没有考虑 yy.xx的情况
-                   //这里需要在variable里面去找。根据depth
+                //System.out.println(ctx.getChild(i).getText()+" "+ctx.getChild(i).getClass());
+                if(result == null){
+                    MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + "未定义的方法形参");
+                    MiniJava.publicErrorLine(linenum, charnum, charnum + classname.length());
                 }
                 methodSignature += result+",";
 
@@ -37,8 +41,6 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
                 //System.out.println( ctx.getChild(i).getText());
             }
             if (MiniJava.returnTypeMap.get(methodSignature) == null) {
-                int linenum = ctx.identifier().getStart().getLine();
-                int charnum = ctx.identifier().getStart().getCharPositionInLine();
                 MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + "未定义的方法");
                 MiniJava.publicErrorLine(linenum, charnum, charnum + classname.length());
             }
@@ -58,7 +60,9 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
             for (int i  = 4; i< count-1; i=i+2){
                 c = ctx.getChild(i);
                 result = c.accept(this);
-                if(result == null){//TODO: 这里还没有考虑 yy.xx的情况
+                if(result == null){
+                    //for debug output, normally here should not be anything
+                    //System.out.println(ctx.getParent().getParent().getChild(2).getText()+"."+ctx.getParent().getChild(2).getText()+"."+ctx.getChild(i).getText());
                     //result = MiniJava.typeMap.get(ctx.getParent().getParent().getChild(2).getText()+","+ctx.getParent().getChild(2).getText()+"."+ctx.getChild(i).getText());
                     //System.out.println(ctx.getParent().getParent().getChild(2).getText()+","+ctx.getParent().getChild(2).getText()+"."+ctx.getChild(i).getText()+ " "+result);
                 }
@@ -85,6 +89,36 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
         }
     }
 
+
+    @Override public Integer visitIdentifierInt(MiniJavaParser.IdentifierIntContext ctx) {
+        String varname = ctx.identifier().getText();
+        //System.out.println("IDENTIFIER NAME: "+varname+" belongs to "+ctx.getParent().getText());
+        String key = "";
+        ParserRuleContext parent = ctx.getParent();
+        int linenum = ctx.identifier().getStart().getLine();
+        int charnum = ctx.identifier().getStart().getCharPositionInLine();
+        //System.out.println(varname);
+        //先检查是否函数中变量，再检查是否类中变量
+        while(parent.depth() >=4) {
+            parent = parent.getParent();
+        }
+        if(parent.depth() == 3) {
+            //System.out.println("parent depth: "+parent.depth());
+            String classname = parent.getParent().getChild(1).getText();
+            String methodname = parent.getChild(2).getText();
+            key = classname + "." + methodname + "." + varname;
+            //System.out.println(key);
+            if(MiniJava.getVarType(key)==null) {
+                key = classname + "." + varname;
+                if(MiniJava.getVarType(key)==null ) {
+                    MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：未定义变量"+  varname);
+                    MiniJava.publicErrorLine(linenum, charnum, charnum + varname.length());
+                }
+            }
+        }
+
+        return MiniJava.getVarType(key); }
+
     @Override
     public Integer visitNewIdentifierInt(MiniJavaParser.NewIdentifierIntContext ctx)
     {
@@ -101,7 +135,7 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
         int charnum = ctx.identifier(0).getStart().getCharPositionInLine();
         Set<String> ancesterSet = new HashSet<String>();
         //Check recurrent inheritance
-        // TODO: Check if there exists a child class instance as a member in a parent class, or vice versa
+
         if(ctx.getChildCount()>=6 && ctx.getChild(2).getText().equals("extends")) {
             parent = ctx.getChild(3).getChild(0).getText();
             if (MiniJava.classMap.containsKey(parent)) {
@@ -127,36 +161,9 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
 
     @Override
     public Integer visitVarDeclaration(MiniJavaParser.VarDeclarationContext ctx) {
-        int type = visit(ctx.type());
-        String varname = ctx.identifier().getText();
         int linenum = ctx.identifier().getStart().getLine();
         int charnum = ctx.identifier().getStart().getCharPositionInLine();
-        if(type == OurConstants.identifierType) {
-            // 非 identifierType 的情形已经在第一轮解决
-            // 根据我们的语法，depth为2为class中的成员变量，为3则为func中的变量
-            String typename = ctx.type().getText();
-            if(!MiniJava.classExist(typename)) {
-                int deflinenum = ctx.type().getStart().getLine();
-                int defcharnum = ctx.type().getStart().getCharPositionInLine();
-                MiniJava.publishErrorMessage("line " + Integer.toString(deflinenum) + ":" + Integer.toString(defcharnum) + " 错误：未定义的类型");
-                MiniJava.publicErrorLine(deflinenum, defcharnum, defcharnum + typename.length());
-                return OurConstants.identifierType;
-            }
-            if(ctx.getParent().depth() == 3) {
-                String classname = ctx.getParent().getParent().getChild(1).getText();
-                String methodname = ctx.getParent().getChild(2).getText();
-                if(!MiniJava.addVarDeclaration(classname + "." + methodname + "." + varname, type)) {
-                    MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：重复定义变量");
-                    MiniJava.publicErrorLine(linenum, charnum, charnum + varname.length());
-                }
-            } else {
-                String classname = ctx.getParent().getChild(1).getText();
-                if(!MiniJava.addVarDeclaration(classname + "." + varname, type)) {
-                    MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：重复定义变量");
-                    MiniJava.publicErrorLine(linenum, charnum, charnum + varname.length());
-                }
-            }
-        }
-        return OurConstants.identifierType;
+        int type = OurMiniJavaVisitor01.Str2Int(ctx.type().getText(), linenum, charnum, "");
+        return type;
     }
 }

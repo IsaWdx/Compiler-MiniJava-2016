@@ -38,7 +38,7 @@ class BBS extends P{
     }
 
     public int [ ] Sort(int a, P p){
-		boolean a;
+		//boolean a;
 		a= true;
 				return 0;
 	}

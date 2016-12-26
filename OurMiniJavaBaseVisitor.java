@@ -99,7 +99,9 @@ public class OurMiniJavaBaseVisitor extends MiniJavaBaseVisitor<Integer> {
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitIdentifierInt(MiniJavaParser.IdentifierIntContext ctx) { return visitChildren(ctx); }
+	@Override public Integer visitIdentifierInt(MiniJavaParser.IdentifierIntContext ctx) {
+		return visitChildren(ctx);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
@@ -222,7 +224,7 @@ public class OurMiniJavaBaseVisitor extends MiniJavaBaseVisitor<Integer> {
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitFalseBoolean(MiniJavaParser.FalseBooleanContext ctx) { return visitChildren(ctx); }
+	@Override public Integer visitFalseBoolean(MiniJavaParser.FalseBooleanContext ctx) { return OurConstants.booleanType; }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -250,7 +252,7 @@ public class OurMiniJavaBaseVisitor extends MiniJavaBaseVisitor<Integer> {
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitTrueBoolean(MiniJavaParser.TrueBooleanContext ctx) { return visitChildren(ctx); }
+	@Override public Integer visitTrueBoolean(MiniJavaParser.TrueBooleanContext ctx) { return OurConstants.booleanType; }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -282,9 +284,10 @@ public class OurMiniJavaBaseVisitor extends MiniJavaBaseVisitor<Integer> {
     }
     @Override
     public Integer visitIdentifierType(MiniJavaParser.IdentifierTypeContext ctx) {
-        return OurConstants.identifierType;
+        return visitChildren(ctx);
+		//Override only used in visit 02
     }
-
+//TODO: visitIdentifier wrong
 
 }
 

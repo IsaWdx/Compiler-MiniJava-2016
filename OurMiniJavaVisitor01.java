@@ -3,7 +3,7 @@ import java.util.*;
 
 public class OurMiniJavaVisitor01 extends OurMiniJavaBaseVisitor {
     // In normal cases, functions should return an integer or null
-    public Integer Str2Int(String type, Integer lnumber, Integer cnumber, String methodname) {
+    public static Integer Str2Int(String type, Integer lnumber, Integer cnumber, String methodname) {
         //System.out.println(type);
         switch (type){
             case "int": return OurConstants.intType;
@@ -13,7 +13,7 @@ public class OurMiniJavaVisitor01 extends OurMiniJavaBaseVisitor {
                 if(MiniJava.classNumberMap.get(type) == null) {
                     MiniJava.publishErrorMessage("line " + Integer.toString(lnumber) + ":" + Integer.toString(cnumber) + " 错误：出现未定义的参数类型" + type);
                     MiniJava.publicErrorLine(lnumber, cnumber, cnumber + methodname.length());
-                    return -1;
+                    return OurConstants.illegalType;
                 }
                 return MiniJava.classNumberMap.get(type);
             //-1 should never appear, however add it in case.
@@ -45,6 +45,9 @@ public class OurMiniJavaVisitor01 extends OurMiniJavaBaseVisitor {
         }
         for(int i = beginfrom; i < endbefore; i = i + 3) {
             methodSignature = methodSignature + Str2Int(children.get(i).getText(),lnumber,cnumber,methodname) + ",";
+            //System.out.println("形参名字："+ children.get(i+1).getText());
+            //System.out.println("形参key： "+classname+"."+methodname+"."+children.get(i+1).getText());
+            MiniJava.addVarDeclaration(classname + "." + methodname + "." + children.get(i + 1).getText(), Str2Int(children.get(i).getText(), lnumber, cnumber, methodname));
         }
         //
         // System.out.println(methodSignature);
@@ -58,31 +61,29 @@ public class OurMiniJavaVisitor01 extends OurMiniJavaBaseVisitor {
 
     @Override
     public Integer visitVarDeclaration(MiniJavaParser.VarDeclarationContext ctx) {
-        int type = visit(ctx.type());
-        String varname = ctx.identifier().getText();
         int linenum = ctx.identifier().getStart().getLine();
         int charnum = ctx.identifier().getStart().getCharPositionInLine();
-        if(type != OurConstants.identifierType) {
-            // identifierType 的情形只能放到第二轮去解决
-            // ctx.getParent().depth()
-            // 根据我们的语法，depth为2为class中的成员变量，为3则为func中的变量
-            String typename = ctx.type().getText();
-            if(ctx.getParent().depth() == 3) {
-                String classname = ctx.getParent().getParent().getChild(1).getText();
-                String methodname = ctx.getParent().getChild(2).getText();
-                if(MiniJava.addVarDeclaration(classname + "." + methodname + "." + varname, type)==false) {
-
-                    MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：重复定义变量");
-                    MiniJava.publicErrorLine(linenum, charnum, charnum + varname.length());
-                }
-            } else {
-                String classname = ctx.getParent().getChild(1).getText();
-                if(MiniJava.addVarDeclaration(classname + "." + varname, type)==false ) {
-                    MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：重复定义变量");
-                    MiniJava.publicErrorLine(linenum, charnum, charnum + varname.length());
-                }
+        int type = Str2Int(ctx.type().getText(), linenum, charnum, "");
+        String varname = ctx.identifier().getText();
+        //System.out.println(type+" "+varname);
+        // 根据我们的语法，depth为2为class中的成员变量，为3则为func中的变量
+       // TODO: Check if there exists a child class instance as a member in a parent class, or vice versa
+        String typename = ctx.type().getText();
+        if (ctx.getParent().depth() == 3) {
+            String classname = ctx.getParent().getParent().getChild(1).getText();
+            String methodname = ctx.getParent().getChild(2).getText();
+            if (MiniJava.addVarDeclaration(classname + "." + methodname + "." + varname, type) == false) {
+                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：重复定义变量");
+                MiniJava.publicErrorLine(linenum, charnum, charnum + varname.length());
+            }
+        } else {
+            String classname = ctx.getParent().getChild(1).getText();
+            if (MiniJava.addVarDeclaration(classname + "." + varname, type) == false) {
+                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：重复定义变量");
+                MiniJava.publicErrorLine(linenum, charnum, charnum + varname.length());
             }
         }
+
         return type;
     }
 }

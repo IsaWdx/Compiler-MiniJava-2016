@@ -49,6 +49,9 @@ public class MiniJava {
         typeMap.put(name, type);
         return true;
     }
+    public static Integer getVarType(String name) {
+        return typeMap.get(name);
+    }
     public static void publicErrorLine(int linenum, int begincharnum, int endcharnum) {
         System.err.println(rawCodes.get(linenum - 1));
         int tabcount = 0;
@@ -73,7 +76,7 @@ public class MiniJava {
     }
     public static void main(String[] args) throws Exception {
         //String inputfilename = "/Users/xuan/Documents/Compiler-MiniJava-2016/binarysearch.txt";
-        String inputfilename = "D:\\Study\\Coursera\\scala\\compiler\\src\\bubblesort.txt";
+        String inputfilename = "D:\\Study\\Coursera\\scala\\compiler\\src\\binarysearch.txt";
         //String inputfilename = "/Users/xuan/Documents/Compiler-MiniJava-2016/bubblesort.txt";
         // read the whole file line by line in advance
         Scanner _s = new Scanner( new FileInputStream(inputfilename) );
