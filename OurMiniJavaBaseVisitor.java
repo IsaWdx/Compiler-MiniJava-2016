@@ -99,6 +99,7 @@ public class OurMiniJavaBaseVisitor extends MiniJavaBaseVisitor<Integer> {
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	//Overrided in visit02
 	@Override public Integer visitIdentifierInt(MiniJavaParser.IdentifierIntContext ctx) {
 		return visitChildren(ctx);
 	}
@@ -108,6 +109,7 @@ public class OurMiniJavaBaseVisitor extends MiniJavaBaseVisitor<Integer> {
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	//override in visit02
 	@Override public Integer visitThisInt(MiniJavaParser.ThisIntContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
@@ -145,7 +147,7 @@ public class OurMiniJavaBaseVisitor extends MiniJavaBaseVisitor<Integer> {
 	 */
 	@Override public Integer visitNewIdentifierInt(MiniJavaParser.NewIdentifierIntContext ctx)
 	{
-
+		//Overriden in visit02
 		return visitChildren(ctx);
 	}
 	/**
@@ -161,63 +163,64 @@ public class OurMiniJavaBaseVisitor extends MiniJavaBaseVisitor<Integer> {
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitParenInt(MiniJavaParser.ParenIntContext ctx) { return visitChildren(ctx); }
+	@Override public Integer visitParenInt(MiniJavaParser.ParenIntContext ctx)
+	{
+		return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitOrbiBoolean(MiniJavaParser.OrbiBooleanContext ctx) { return visitChildren(ctx); }
+	@Override public Integer visitOrbiBoolean(MiniJavaParser.OrbiBooleanContext ctx) { return OurConstants.booleanType; }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitNotBoolean(MiniJavaParser.NotBooleanContext ctx) { return visitChildren(ctx); }
+	@Override public Integer visitNotBoolean(MiniJavaParser.NotBooleanContext ctx) { return OurConstants.booleanType;}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitAndibBoolean(MiniJavaParser.AndibBooleanContext ctx) { return visitChildren(ctx); }
+	@Override public Integer visitAndibBoolean(MiniJavaParser.AndibBooleanContext ctx) { return OurConstants.booleanType; }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitAndbiBoolean(MiniJavaParser.AndbiBooleanContext ctx) { return visitChildren(ctx); }
+	@Override public Integer visitAndbiBoolean(MiniJavaParser.AndbiBooleanContext ctx) { return OurConstants.booleanType; }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitAndbbBoolean(MiniJavaParser.AndbbBooleanContext ctx) { return visitChildren(ctx); }
+	@Override public Integer visitAndbbBoolean(MiniJavaParser.AndbbBooleanContext ctx) {  return OurConstants.booleanType; }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitEqualbbBoolean(MiniJavaParser.EqualbbBooleanContext ctx) { return visitChildren(ctx); }
+	@Override public Integer visitEqualbbBoolean(MiniJavaParser.EqualbbBooleanContext ctx) {  return OurConstants.booleanType; }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitOrbbBoolean(MiniJavaParser.OrbbBooleanContext ctx) { return visitChildren(ctx); }
+	@Override public Integer visitOrbbBoolean(MiniJavaParser.OrbbBooleanContext ctx) {  return OurConstants.booleanType; }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitAndiiBoolean(MiniJavaParser.AndiiBooleanContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -231,21 +234,21 @@ public class OurMiniJavaBaseVisitor extends MiniJavaBaseVisitor<Integer> {
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitParenBoolean(MiniJavaParser.ParenBooleanContext ctx) { return visitChildren(ctx); }
+	@Override public Integer visitParenBoolean(MiniJavaParser.ParenBooleanContext ctx) { return OurConstants.booleanType; }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitOribBoolean(MiniJavaParser.OribBooleanContext ctx) { return visitChildren(ctx); }
+	@Override public Integer visitOribBoolean(MiniJavaParser.OribBooleanContext ctx) { return OurConstants.booleanType; }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitOriiBoolean(MiniJavaParser.OriiBooleanContext ctx) { return visitChildren(ctx); }
+	@Override public Integer visitOriiBoolean(MiniJavaParser.OriiBooleanContext ctx) { return OurConstants.booleanType; }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -259,7 +262,7 @@ public class OurMiniJavaBaseVisitor extends MiniJavaBaseVisitor<Integer> {
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitEqualiiBoolean(MiniJavaParser.EqualiiBooleanContext ctx) { return visitChildren(ctx); }
+	@Override public Integer visitEqualiiBoolean(MiniJavaParser.EqualiiBooleanContext ctx) { return OurConstants.booleanType; }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -270,23 +273,18 @@ public class OurMiniJavaBaseVisitor extends MiniJavaBaseVisitor<Integer> {
 	public Integer visitIdentifier(MiniJavaParser.IdentifierContext ctx) {
 		//System.out.println(ctx);
 		return visitChildren(ctx); }
-
+	//Notice: The followings are merely symbols, like "int" or "int[]"
     @Override
     public Integer visitArrayType(MiniJavaParser.ArrayTypeContext ctx) {
-		return OurConstants.arrayType;    }
+		return visitChildren(ctx);    }
     @Override
     public Integer visitBooleanType(MiniJavaParser.BooleanTypeContext ctx) {
-        return OurConstants.booleanType;
-    }
-    @Override
-    public Integer visitIntType(MiniJavaParser.IntTypeContext ctx) {
-        return OurConstants.intType;
-    }
-    @Override
-    public Integer visitIdentifierType(MiniJavaParser.IdentifierTypeContext ctx) {
         return visitChildren(ctx);
-		//Override only used in visit 02
     }
+    @Override
+    public Integer visitIntType(MiniJavaParser.IntTypeContext ctx) {        return visitChildren(ctx);    }
+    @Override
+    public Integer visitIdentifierType(MiniJavaParser.IdentifierTypeContext ctx) {        return visitChildren(ctx); }
 //TODO: visitIdentifier wrong
 
 }

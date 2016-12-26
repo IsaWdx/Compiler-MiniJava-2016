@@ -7,7 +7,7 @@ class BinarySearch{
 // methods to initialize, print and search the array
 // using Binary Search
 
-class BS{
+class BS2{
     //
 }
 
@@ -19,7 +19,7 @@ class BS{
     // for elements on the array
     public int Start(int sz){
 	int aux01 ;
-	int aux01 ;
+	//int aux01 ;
 	int aux02 ;
 	aux01 = this.Init(sz);
 	aux02 = this.Print();
@@ -54,7 +54,7 @@ class BS{
 	int medium ;
 	int aux01 ;
 	int nt ;
-	int nt ;
+	//int nt ;
 
 	aux01 = 0 ;
 	bs01 = false ;
@@ -64,9 +64,10 @@ class BS{
 	var_cont = true ;
 	while (var_cont){
 	    medium = left + right ;
-	    medium = this.Div(medium);
+	    medium = (this.Div(medium));
+	    medium = (medium.Div(medium));
 	    aux01 = number[medium] ;
-	    if (num < aux01) right = medium - 1 ;
+	    if (num < aux01) right = medium - (1) ;
 	    else left = medium + 1 ;
 	    if (this.Compare(aux01,num)) var_cont = false ;
 	    else var_cont = true ;

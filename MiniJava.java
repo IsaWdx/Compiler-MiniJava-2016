@@ -17,7 +17,7 @@ public class MiniJava {
     public static Map<Integer,String> numberClassMap = new HashMap<Integer, String>();//find classname through number
     public static Map<String, Integer> classNumberMap = new HashMap<String, Integer>();//vice versa
     public static Integer totalClassNumber = 0;
-    //TODO: How to check reference of variables in parent scope(variable in method are defined in class)��
+    //TODO: How to check reference of variables in parent scope(variable in method are defined in class)��
     private static List<String> rawCodes = new ArrayList<String>();
     public static boolean storeReturnType(String name, Integer type) {
         if(returnTypeMap.containsKey(name)) {
@@ -94,12 +94,16 @@ public class MiniJava {
         //
         OurMiniJavaVisitor00 v0 = new OurMiniJavaVisitor00();
         v0.visit(tree);
+        if(hasError) {
+            System.err.println("请先解决以上问题");
+            return;
+        }
         //
         OurMiniJavaVisitor01 v1 = new OurMiniJavaVisitor01();
         v1.visit(tree);
         //
         if(hasError) {
-            System.err.println("Please solve the above problems first");
+            System.err.println("请先解决以上问题");
             return;
         }
         //
@@ -107,7 +111,7 @@ public class MiniJava {
         v2.visit(tree);
 
         if(hasError) {
-            System.err.println("Please solve the above problems first");
+            System.err.println("请先解决以上问题");
             return;
         }
         org.antlr.v4.gui.Trees.inspect(tree, parser);

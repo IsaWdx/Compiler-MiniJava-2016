@@ -4,7 +4,6 @@ import java.util.*;
 public class OurMiniJavaVisitor01 extends OurMiniJavaBaseVisitor {
     // In normal cases, functions should return an integer or null
     public static Integer Str2Int(String type, Integer lnumber, Integer cnumber, String methodname) {
-        //System.out.println(type);
         switch (type){
             case "int": return OurConstants.intType;
             case "int[]": return OurConstants.arrayType;
@@ -16,8 +15,6 @@ public class OurMiniJavaVisitor01 extends OurMiniJavaBaseVisitor {
                     return OurConstants.illegalType;
                 }
                 return MiniJava.classNumberMap.get(type);
-            //-1 should never appear, however add it in case.
-            //no OurConstants.identifierType here
         }
     }
     @Override
@@ -45,27 +42,20 @@ public class OurMiniJavaVisitor01 extends OurMiniJavaBaseVisitor {
         }
         for(int i = beginfrom; i < endbefore; i = i + 3) {
             methodSignature = methodSignature + Str2Int(children.get(i).getText(),lnumber,cnumber,methodname) + ",";
-            //System.out.println("形参名字："+ children.get(i+1).getText());
-            //System.out.println("形参key： "+classname+"."+methodname+"."+children.get(i+1).getText());
             MiniJava.addVarDeclaration(classname + "." + methodname + "." + children.get(i + 1).getText(), Str2Int(children.get(i).getText(), lnumber, cnumber, methodname));
         }
-        //
-        // System.out.println(methodSignature);
         if(MiniJava.storeReturnType(methodSignature, returntype) == false) {
             MiniJava.publishErrorMessage("line " + Integer.toString(lnumber) + ":" + Integer.toString(cnumber) + " 错误：类中出现相同签名的方法");
             MiniJava.publicErrorLine(lnumber, cnumber, cnumber + methodname.length());
         }
         return visitChildren(ctx);
     }
-
-
     @Override
     public Integer visitVarDeclaration(MiniJavaParser.VarDeclarationContext ctx) {
         int linenum = ctx.identifier().getStart().getLine();
         int charnum = ctx.identifier().getStart().getCharPositionInLine();
         int type = Str2Int(ctx.type().getText(), linenum, charnum, "");
         String varname = ctx.identifier().getText();
-        //System.out.println(type+" "+varname);
         // 根据我们的语法，depth为2为class中的成员变量，为3则为func中的变量
        // TODO: Check if there exists a child class instance as a member in a parent class, or vice versa
         String typename = ctx.type().getText();

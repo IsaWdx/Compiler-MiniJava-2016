@@ -1,4 +1,4 @@
-import org.antlr.v4.runtime.ParserRuleContext;
+ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 import org.antlr.v4.runtime.tree.ParseTree;
 
@@ -8,106 +8,77 @@ import java.util.Set;
 
 public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
     // in normal cases, functions should return an integer or null
-
+    @Override public Integer visitParenInt(MiniJavaParser.ParenIntContext ctx)
+    {
+        ParseTree c = ctx.getChild(1);
+        Integer result = c.accept(this);
+        return result;
+    }
     @Override public Integer visitMethodInt(MiniJavaParser.MethodIntContext ctx) {
         int returntype = OurConstants.illegalType;
         String classname = "";
         String methodname = "";
         String methodSignature = "";
-        //check "this" as first
-        if (ctx.getChild(0).getText().equals("this")) {
-            int depth = ctx.depth();
-            ParserRuleContext parent = ctx.getParent();
-            for (; depth > 2; depth--) {
-                classname = parent.getChild(1).getText();
-                parent = parent.getParent();
-            }
-            //System.out.println(ctx.getText());
-            methodSignature = classname + "." + ctx.getChild(2).getText() + "(";
-            int count = ctx.getChildCount();
-            int linenum = ctx.identifier().getStart().getLine();
-            int charnum = ctx.identifier().getStart().getCharPositionInLine();
-            for (int i  = 4; i< count-1; i=i+2){
-                ParseTree c = ctx.getChild(i);
-                Integer result = c.accept(this);
-                //System.out.println(ctx.getChild(i).getText()+" "+ctx.getChild(i).getClass());
-                if(result == null){
-                    MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + "未定义的方法形参");
-                    MiniJava.publicErrorLine(linenum, charnum, charnum + classname.length());
-                }
-                methodSignature += result+",";
-
-                //System.out.println("result: "+result);
-                //System.out.println( ctx.getChild(i).getText());
-            }
-            if (MiniJava.returnTypeMap.get(methodSignature) == null) {
-                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + "未定义的方法");
-                MiniJava.publicErrorLine(linenum, charnum, charnum + classname.length());
-            }
-            //System.out.println();
-            return MiniJava.returnTypeMap.get(methodname);
-
+        int linenum = ctx.identifier().getStart().getLine();
+        int charnum = ctx.identifier().getStart().getCharPositionInLine();
+        //visit first child, it may be a child node instead of pure identifier, like new BBS()
+        //result stores the return type
+        ParseTree c = ctx.getChild(0);
+        Integer result = c.accept(this);
+        classname = MiniJava.numberClassMap.get(result);
+        if(result == null || classname == null) {
+            MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + "未定义的类名");
+            MiniJava.publicErrorLine(linenum, charnum-ctx.getChild(0).getText().length()-1,charnum-1 );
+            return OurConstants.illegalType;
         }
-        else{
-            //visit first child, it may be a child node instead of pure identifier, like new BBS()
-            //visit the child node, and result stores the return type
-            ParseTree c = ctx.getChild(0);
-            Integer result = c.accept(this);
-            classname = MiniJava.numberClassMap.get(result);
-            Integer count = ctx.getChildCount();
-            methodname = ctx.getChild(2).getText();
-            methodSignature = classname+"."+methodname+"(";
-            for (int i  = 4; i< count-1; i=i+2){
-                c = ctx.getChild(i);
-                result = c.accept(this);
-                if(result == null){
-                    //for debug output, normally here should not be anything
-                    //System.out.println(ctx.getParent().getParent().getChild(2).getText()+"."+ctx.getParent().getChild(2).getText()+"."+ctx.getChild(i).getText());
-                    //result = MiniJava.typeMap.get(ctx.getParent().getParent().getChild(2).getText()+","+ctx.getParent().getChild(2).getText()+"."+ctx.getChild(i).getText());
-                    //System.out.println(ctx.getParent().getParent().getChild(2).getText()+","+ctx.getParent().getChild(2).getText()+"."+ctx.getChild(i).getText()+ " "+result);
-                }
-                methodSignature += result+",";
-                //System.out.println("result: "+result);
-                //System.out.println( ctx.getChild(i).getText());
-            }
-
-            //System.out.println(methodname+" "+methodSignature);
-            //TODO：There seems no following problems
-            if (MiniJava.returnTypeMap.get(methodSignature)==null) {
-                int linenum = ctx.identifier().getStart().getLine();
-                int charnum = ctx.identifier().getStart().getCharPositionInLine();
-                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + "未定义的方法");
+        Integer count = ctx.getChildCount();
+        methodname = ctx.getChild(2).getText();
+        methodSignature = classname + "." + methodname + "(";
+        for (int i = 4; i < count - 1; i = i + 2) {
+            c = ctx.getChild(i);
+            result = c.accept(this);
+            if (result == null) {
+                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + "未定义的方法形参");
                 MiniJava.publicErrorLine(linenum, charnum, charnum + classname.length());
+                return OurConstants.illegalType;
             }
-            else {
-                returntype = MiniJava.returnTypeMap.get(methodSignature);
-            }
-            //在函数调用中 记录现在所在的位置处理this，然后找到他的定义位置，找到返回值
-            ParserRuleContext parent = ctx.getParent();
-            //System.out.println("return type "+returntype + " " + ctx.getChild(0).getText() +" "+ctx.getChild(2).getText());
-            return returntype;
+            methodSignature += result + ",";
         }
+        if (MiniJava.returnTypeMap.get(methodSignature) == null) {
+            MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + "未定义的方法" + classname);
+            MiniJava.publicErrorLine(linenum, charnum, charnum + classname.length());
+            return OurConstants.illegalType;
+        } else {
+            returntype = MiniJava.returnTypeMap.get(methodSignature);
+        }
+        return returntype;
     }
-
+    @Override public Integer visitThisInt(MiniJavaParser.ThisIntContext ctx) {
+        Integer classnumber ;
+        String classname = "";
+        int depth = ctx.depth();
+        ParserRuleContext parent = ctx.getParent();
+        for (; depth > 2; depth--) {
+            classname = parent.getChild(1).getText();
+            parent = parent.getParent();
+        }
+        return  MiniJava.classNumberMap.get(classname);
+    }
 
     @Override public Integer visitIdentifierInt(MiniJavaParser.IdentifierIntContext ctx) {
         String varname = ctx.identifier().getText();
-        //System.out.println("IDENTIFIER NAME: "+varname+" belongs to "+ctx.getParent().getText());
         String key = "";
         ParserRuleContext parent = ctx.getParent();
         int linenum = ctx.identifier().getStart().getLine();
         int charnum = ctx.identifier().getStart().getCharPositionInLine();
-        //System.out.println(varname);
         //先检查是否函数中变量，再检查是否类中变量
         while(parent.depth() >=4) {
             parent = parent.getParent();
         }
         if(parent.depth() == 3) {
-            //System.out.println("parent depth: "+parent.depth());
             String classname = parent.getParent().getChild(1).getText();
             String methodname = parent.getChild(2).getText();
             key = classname + "." + methodname + "." + varname;
-            //System.out.println(key);
             if(MiniJava.getVarType(key)==null) {
                 key = classname + "." + varname;
                 if(MiniJava.getVarType(key)==null ) {
@@ -123,8 +94,6 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
     public Integer visitNewIdentifierInt(MiniJavaParser.NewIdentifierIntContext ctx)
     {
         String returntype =ctx.getChild(1).getText();
-        //System.out.println(ctx.getChild(1).getText()+" : "+MiniJava.classNumberMap.get(ctx.getChild(1).getText()));
-        //System.out.println(MiniJava.classNumberMap.get(returntype));
         return MiniJava.classNumberMap.get(returntype);
     }
     @Override
@@ -155,15 +124,5 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
             }
         }
         return visitChildren(ctx);
-    }
-
-
-
-    @Override
-    public Integer visitVarDeclaration(MiniJavaParser.VarDeclarationContext ctx) {
-        int linenum = ctx.identifier().getStart().getLine();
-        int charnum = ctx.identifier().getStart().getCharPositionInLine();
-        int type = OurMiniJavaVisitor01.Str2Int(ctx.type().getText(), linenum, charnum, "");
-        return type;
     }
 }
