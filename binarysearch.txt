@@ -11,9 +11,14 @@ class BS2{
     //
 }
 
+class CHILD extends BS {
+	// nothing ...
+}
+
 class BS{
     int[] number ;
     int size ;
+	CHILD hehe ;
 
     // Invoke methods to initialize, print and search
     // for elements on the array
@@ -65,7 +70,7 @@ class BS{
 	while (var_cont){
 	    medium = left + right ;
 	    medium = (this.Div(medium));
-	    medium = (medium.Div(medium));
+	    //medium = (medium.Div(medium));
 	    aux01 = number[medium] ;
 	    if (num < aux01) right = medium - (1) ;
 	    else left = medium + 1 ;

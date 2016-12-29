@@ -18,6 +18,17 @@ public class MiniJava {
     public static Map<String, Integer> classNumberMap = new HashMap<String, Integer>();//vice versa
     public static Integer totalClassNumber = 0;
     private static List<String> rawCodes = new ArrayList<String>();
+
+    public static boolean isChildClass(String parent, String child) {
+        String currClassName = classMap.get(child);
+        while(currClassName != null && !currClassName.equals("")) {
+            if(currClassName.equals(parent))
+                return true;
+            currClassName = classMap.get(currClassName);
+        }
+        return false;
+    }
+
     public static boolean storeReturnType(String name, Integer type) {
         if(returnTypeMap.containsKey(name)) {
             return false;
@@ -74,8 +85,8 @@ public class MiniJava {
         System.err.println(message);
     }
     public static void main(String[] args) throws Exception {
-        //String inputfilename = "/Users/xuan/Documents/Compiler-MiniJava-2016/binarysearch.txt";
-        String inputfilename = "D:\\Study\\Coursera\\scala\\compiler\\src\\factorial.txt";
+        String inputfilename = "/Users/xuan/Compiler-MiniJava-2016/binarysearch.txt";
+        //String inputfilename = "D:\\Study\\Coursera\\scala\\compiler\\src\\factorial.txt";
         //String inputfilename = "/Users/xuan/Documents/Compiler-MiniJava-2016/bubblesort.txt";
         // read the whole file line by line in advance
         Scanner _s = new Scanner( new FileInputStream(inputfilename) );

@@ -125,4 +125,27 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
         }
         return visitChildren(ctx);
     }
+
+    @Override
+    public Integer visitVarDeclaration(MiniJavaParser.VarDeclarationContext ctx) {
+        int linenum = ctx.identifier().getStart().getLine();
+        int charnum = ctx.identifier().getStart().getCharPositionInLine();
+        String varname = ctx.identifier().getText();
+        String typename = ctx.type().getText();
+        // depth为2为class中的成员变量，为3则为func中的变量
+        if (ctx.getParent().depth() == 3) {
+            String classname = ctx.getParent().getParent().getChild(1).getText();
+            if(MiniJava.isChildClass(classname, typename)) {
+                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：在父类中出现子类的实例");
+                MiniJava.publicErrorLine(linenum, charnum, charnum + varname.length());
+            }
+        } else {
+            String classname = ctx.getParent().getChild(1).getText();
+            if(MiniJava.isChildClass(classname, typename)) {
+                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：在父类中出现子类的实例");
+                MiniJava.publicErrorLine(linenum, charnum, charnum + varname.length());
+            }
+        }
+        return OurMiniJavaVisitor01.Str2Int(ctx.type().getText(), linenum, charnum, "");
+    }
 }
