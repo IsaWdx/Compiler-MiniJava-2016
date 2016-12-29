@@ -102,9 +102,12 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
             key = classname + "." + methodname + "." + varname;
             if(MiniJava.getVarType(key)==null) {
                 key = classname + "." + varname;
-                if(MiniJava.getVarType(key)==null ) {
+                if(MiniJava.getVarType(key)==null) {
                     MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：未定义变量"+  varname);
                     MiniJava.publicErrorLine(linenum, charnum, charnum + varname.length());
+                    // 临时补救措施，避免返回一个null的情形出现
+                    // 返回-1会导致不能和任何现有类型匹配，报错，这是合理反应
+                    return -1;
                 }
             }
         }

@@ -94,7 +94,7 @@ class BS{
 	int testol ;
 	boolean lala ;
 
-	testol = lala * number.length;
+	testol = lala * number2333.length;
 	//testol = number233.length;
 
 	count01 = 0 ;
