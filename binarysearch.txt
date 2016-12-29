@@ -18,7 +18,7 @@ class CHILD extends BS {
 class BS{
     int[] number ;
     int size ;
-	CHILD hehe ;
+	//CHILD hehe ;
 
     // Invoke methods to initialize, print and search
     // for elements on the array
@@ -94,7 +94,8 @@ class BS{
 	int testol ;
 	boolean lala ;
 
-	testol = lala * lala ;
+	testol = lala * number.length;
+	//testol = number233.length;
 
 	count01 = 0 ;
 	count02 = 0 ;

@@ -172,11 +172,15 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
 
     @Override
     public Integer visitAssignStatement(MiniJavaParser.AssignStatementContext ctx) {
-        int rightType;
+        int rightType = -1;
         try {
             rightType = visit(ctx.intexpression());
         } catch (NullPointerException expname) {
-            rightType = visit(ctx.booleanexpression());
+            try {
+                rightType = visit(ctx.booleanexpression());
+            } catch (Exception e) {
+                System.out.println(ctx.getText());
+            }
         }
         ParserRuleContext currCtx = ctx;
         int extraDepth = ctx.getParent().depth() - 3;
