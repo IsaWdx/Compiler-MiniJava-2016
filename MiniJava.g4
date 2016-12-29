@@ -20,7 +20,7 @@ statement:          '{' statement* '}'    #braceStatement
 intexpression:      intexpression op=( '*' | '/' ) intexpression	#mulInt
              |      intexpression op=( '+' | '-' ) intexpression	#addInt
              |      intexpression '[' intexpression ']'				#arrayInt
-             |      intexpression '.' 'length'						#lengthInt
+             |      identifier '.' 'length'						#lengthInt
              |      intexpression '.' identifier '(' ( (intexpression|booleanexpression) ( ',' (intexpression|booleanexpression) )* )? ')'	#methodInt
              |      INTEGER_LITERAL									#literalInt
              |      identifier										#identifierInt
