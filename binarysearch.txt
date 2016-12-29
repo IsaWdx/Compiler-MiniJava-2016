@@ -91,6 +91,10 @@ class BS{
 	int count01 ;
 	int count02 ;
 	int aux03 ;
+	int testol ;
+	boolean lala ;
+
+	testol = lala * lala ;
 
 	count01 = 0 ;
 	count02 = 0 ;

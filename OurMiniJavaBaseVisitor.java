@@ -117,7 +117,10 @@ public class OurMiniJavaBaseVisitor extends MiniJavaBaseVisitor<Integer> {
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitMulInt(MiniJavaParser.MulIntContext ctx) { return OurConstants.intType; }
+	@Override public Integer visitMulInt(MiniJavaParser.MulIntContext ctx) {
+		visitChildren(ctx);
+		return OurConstants.intType;
+	}
 	/**
 	 * {@inheritDoc}
 	 *

@@ -8,12 +8,32 @@ import java.util.Set;
 
 public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
     // in normal cases, functions should return an integer or null
-    @Override public Integer visitParenInt(MiniJavaParser.ParenIntContext ctx)
-    {
+    @Override
+    public Integer visitMulInt(MiniJavaParser.MulIntContext ctx) {
+        //return OurConstants.intType;
+        int type1 = visit(ctx.intexpression(0));
+        int type2 = visit(ctx.intexpression(1));
+        if(type1 != OurConstants.intType) {
+            int linenum = ctx.intexpression(0).getStart().getLine();
+            int charnum = ctx.intexpression(0).getStart().getCharPositionInLine();
+            MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：进行运算的变量必须是整型");
+            MiniJava.publicErrorLine(linenum, charnum, charnum + ctx.intexpression(0).getText().length());
+        }
+        if(type2 != OurConstants.intType) {
+            int linenum = ctx.intexpression(1).getStart().getLine();
+            int charnum = ctx.intexpression(1).getStart().getCharPositionInLine();
+            MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：进行运算的变量必须是整型");
+            MiniJava.publicErrorLine(linenum, charnum, charnum + ctx.intexpression(1).getText().length());
+        }
+        return OurConstants.intType;
+    }
+
+    @Override public Integer visitParenInt(MiniJavaParser.ParenIntContext ctx) {
         ParseTree c = ctx.getChild(1);
         Integer result = c.accept(this);
         return result;
     }
+
     @Override public Integer visitMethodInt(MiniJavaParser.MethodIntContext ctx) {
         int returntype = OurConstants.illegalType;
         String classname = "";
@@ -53,6 +73,7 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
         }
         return returntype;
     }
+
     @Override public Integer visitThisInt(MiniJavaParser.ThisIntContext ctx) {
         Integer classnumber ;
         String classname = "";
@@ -91,11 +112,11 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
     }
 
     @Override
-    public Integer visitNewIdentifierInt(MiniJavaParser.NewIdentifierIntContext ctx)
-    {
+    public Integer visitNewIdentifierInt(MiniJavaParser.NewIdentifierIntContext ctx) {
         String returntype =ctx.getChild(1).getText();
         return MiniJava.classNumberMap.get(returntype);
     }
+
     @Override
     public Integer visitClassDeclaration(MiniJavaParser.ClassDeclarationContext ctx) {
         String classname = ctx.getChild(1).getText();

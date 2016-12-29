@@ -17,7 +17,7 @@ public class OurMiniJavaVisitor01 extends OurMiniJavaBaseVisitor {
                 return MiniJava.classNumberMap.get(type);
         }
     }
-    
+
     @Override
     public Integer visitMethodDeclaration(MiniJavaParser.MethodDeclarationContext ctx) {
         // 第一轮记录return type，第二轮验证 & more
@@ -58,7 +58,6 @@ public class OurMiniJavaVisitor01 extends OurMiniJavaBaseVisitor {
         int type = Str2Int(ctx.type().getText(), linenum, charnum, "");
         String varname = ctx.identifier().getText();
         // 根据我们的语法，depth为2为class中的成员变量，为3则为func中的变量
-       // TODO: Check if there exists a child class instance as a member in a parent class, or vice versa
         String typename = ctx.type().getText();
         if (ctx.getParent().depth() == 3) {
             String classname = ctx.getParent().getParent().getChild(1).getText();
