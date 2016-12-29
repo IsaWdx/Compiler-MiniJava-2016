@@ -151,11 +151,11 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
 
     @Override
     public Integer visitAssignStatement(MiniJavaParser.AssignStatementContext ctx) {
-        int leftType;
+        int rightType;
         try {
-            leftType = visit(ctx.intexpression());
+            rightType = visit(ctx.intexpression());
         } catch (NullPointerException expname) {
-            leftType = visit(ctx.booleanexpression());
+            rightType = visit(ctx.booleanexpression());
         }
         ParserRuleContext currCtx = ctx;
         int extraDepth = ctx.getParent().depth() - 3;
@@ -163,17 +163,19 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
             currCtx = currCtx.getParent();
         String classname = currCtx.getParent().getParent().getChild(1).getText();
         String methodname = currCtx.getParent().getChild(2).getText();
-        int rightType;
+        int leftType;
         if(MiniJava.getVarType(classname + "." + methodname + "." + ctx.identifier().getText()) == null) {
-            rightType = MiniJava.getVarType(classname + "." + ctx.identifier().getText());
+            leftType = MiniJava.getVarType(classname + "." + ctx.identifier().getText());
         } else {
-            rightType = MiniJava.getVarType(classname + "." + methodname + "." + ctx.identifier().getText());
+            leftType = MiniJava.getVarType(classname + "." + methodname + "." + ctx.identifier().getText());
         }
         if(leftType != rightType) {
             int linenum = ctx.identifier().getStart().getLine();
             int charnum = ctx.identifier().getStart().getCharPositionInLine();
             MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：赋值类型不匹配");
             MiniJava.publicErrorLine(linenum, charnum, charnum + ctx.identifier().getText().length());
+            //System.out.println(leftType);
+            //System.out.println(rightType);
         }
         return 0;
     }

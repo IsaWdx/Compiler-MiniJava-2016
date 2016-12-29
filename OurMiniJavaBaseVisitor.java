@@ -124,7 +124,7 @@ public class OurMiniJavaBaseVisitor extends MiniJavaBaseVisitor<Integer> {
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitArrayInt(MiniJavaParser.ArrayIntContext ctx) { return  OurConstants.arrayType; }
+	@Override public Integer visitArrayInt(MiniJavaParser.ArrayIntContext ctx) { return  OurConstants.intType; }
 	/**
 	 * {@inheritDoc}
 	 *
