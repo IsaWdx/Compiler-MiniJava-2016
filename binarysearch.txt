@@ -73,7 +73,8 @@ class BS{
 	    //medium = (medium.Div(medium));
 	    aux01 = number[medium] ;
 	    if (num < aux01) right = medium - (1) ;
-	    else left = medium + 1 ;
+	    //else left = medium + 1 ;
+		else left = medium + var_cont ;
 	    if (this.Compare(aux01,num)) var_cont = false ;
 	    else var_cont = true ;
 	    if (right < left) var_cont = false ;
