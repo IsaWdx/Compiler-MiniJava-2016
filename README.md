@@ -22,8 +22,8 @@ gist: https://gist.github.com/taineleau/35e5de53e14770738ff4cf30cdce238d
 * 检查了未声明的类的使用。
 * 对所有expression的返回值做了设置。（OurMiniJavaBaseListener中也修改了一部分返回值）
 * Check if there exists a child class instance as a member in a parent class, but the child could have a reference to its parent as a member var.
+* 检查了赋值时等式两边类型不匹配的问题
 
 ### TODO
-* 赋值类型不匹配（int / Boolean / array / class）
 * 运算符、数组下标对应的类型检查
 
