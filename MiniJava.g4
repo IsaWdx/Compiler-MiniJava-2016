@@ -5,10 +5,10 @@ mainClass:          'class' identifier '{' 'public' 'static' 'void' 'main' '(' '
 classDeclaration:   'class' identifier ( 'extends' identifier )? '{' varDeclaration* methodDeclaration* '}' ;
 varDeclaration:     type identifier ';' ;
 methodDeclaration:  'public' type identifier '(' ( type identifier ( ',' type identifier )* )? ')' '{' varDeclaration* statement* 'return' (intexpression|booleanexpression) ';' '}' ;
-type:               ('int' '[' ']')      #arrayType
+type:               ('int' '[' ']')       #arrayType
     |               'boolean'             #booleanType
     |               'int'                 #intType
-    |               identifier           #identifierType
+    |               identifier            #identifierType
     ;
 statement:          '{' statement* '}'    #braceStatement
          |          'if' '(' (intexpression|booleanexpression) ')' statement ('else' statement)?	#ifStatement
@@ -20,7 +20,7 @@ statement:          '{' statement* '}'    #braceStatement
 intexpression:      intexpression op=( '*' | '/' ) intexpression	#mulInt
              |      intexpression op=( '+' | '-' ) intexpression	#addInt
              |      intexpression '[' intexpression ']'				#arrayInt
-             |      identifier '.' 'length'						#lengthInt
+             |      identifier '.' 'length'						    #lengthInt
              |      intexpression '.' identifier '(' ( (intexpression|booleanexpression) ( ',' (intexpression|booleanexpression) )* )? ')'	#methodInt
              |      INTEGER_LITERAL									#literalInt
              |      identifier										#identifierInt

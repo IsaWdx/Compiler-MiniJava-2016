@@ -1,4 +1,4 @@
- import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 import org.antlr.v4.runtime.tree.ParseTree;
 
@@ -189,6 +189,29 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
             }
         }
         return OurMiniJavaVisitor01.Str2Int(ctx.type().getText(), linenum, charnum, "");
+    }
+
+    @Override
+    public Integer visitAssignArrayStatement(MiniJavaParser.AssignArrayStatementContext ctx) {
+        //return visitChildren(ctx);
+        try {
+            int indexType = visit(ctx.intexpression(0));
+            if(indexType != OurConstants.intType) {
+                int linenum = ctx.intexpression(0).getStart().getLine();
+                int charnum = ctx.intexpression(0).getStart().getCharPositionInLine();
+                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：数组下标只能是整数类型");
+                MiniJava.publicErrorLine(linenum, charnum, charnum + ctx.intexpression(0).getText().length());
+            }
+            // 以下两部分虽然（暂时）不检查，但是不应该不visit
+            visit(ctx.identifier());
+            visit(ctx.intexpression(1));
+        } catch (NullPointerException e) {
+            int linenum = ctx.getStart().getLine();
+            int charnum = ctx.getStart().getCharPositionInLine();
+            MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：数组下标只能是整数类型");
+            MiniJava.publicErrorLine(linenum, charnum, charnum + 3);
+        }
+        return 0;
     }
 
     @Override
