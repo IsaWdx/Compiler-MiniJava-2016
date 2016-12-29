@@ -87,8 +87,8 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
                 }
             }
         }
-
-        return MiniJava.getVarType(key); }
+        return MiniJava.getVarType(key);
+    }
 
     @Override
     public Integer visitNewIdentifierInt(MiniJavaParser.NewIdentifierIntContext ctx)
@@ -147,5 +147,34 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
             }
         }
         return OurMiniJavaVisitor01.Str2Int(ctx.type().getText(), linenum, charnum, "");
+    }
+
+    @Override
+    public Integer visitAssignStatement(MiniJavaParser.AssignStatementContext ctx) {
+        int leftType;
+        try {
+            leftType = visit(ctx.intexpression());
+        } catch (NullPointerException expname) {
+            leftType = visit(ctx.booleanexpression());
+        }
+        ParserRuleContext currCtx = ctx;
+        int extraDepth = ctx.getParent().depth() - 3;
+        for(int i = 0; i < extraDepth; i++)
+            currCtx = currCtx.getParent();
+        String classname = currCtx.getParent().getParent().getChild(1).getText();
+        String methodname = currCtx.getParent().getChild(2).getText();
+        int rightType;
+        if(MiniJava.getVarType(classname + "." + methodname + "." + ctx.identifier().getText()) == null) {
+            rightType = MiniJava.getVarType(classname + "." + ctx.identifier().getText());
+        } else {
+            rightType = MiniJava.getVarType(classname + "." + methodname + "." + ctx.identifier().getText());
+        }
+        if(leftType != rightType) {
+            int linenum = ctx.identifier().getStart().getLine();
+            int charnum = ctx.identifier().getStart().getCharPositionInLine();
+            MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：赋值类型不匹配");
+            MiniJava.publicErrorLine(linenum, charnum, charnum + ctx.identifier().getText().length());
+        }
+        return 0;
     }
 }

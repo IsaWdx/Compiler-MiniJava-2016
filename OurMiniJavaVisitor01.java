@@ -17,6 +17,7 @@ public class OurMiniJavaVisitor01 extends OurMiniJavaBaseVisitor {
                 return MiniJava.classNumberMap.get(type);
         }
     }
+    
     @Override
     public Integer visitMethodDeclaration(MiniJavaParser.MethodDeclarationContext ctx) {
         // 第一轮记录return type，第二轮验证 & more
