@@ -150,7 +150,10 @@ public class OurMiniJavaBaseVisitor extends MiniJavaBaseVisitor<Integer> {
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitLiteralInt(MiniJavaParser.LiteralIntContext ctx) { return OurConstants.intType; }
+	@Override public Integer visitLiteralInt(MiniJavaParser.LiteralIntContext ctx) {
+		visitChildren(ctx);
+		return OurConstants.intType;
+	}
 	/**
 	 * {@inheritDoc}
 	 *
@@ -187,49 +190,70 @@ public class OurMiniJavaBaseVisitor extends MiniJavaBaseVisitor<Integer> {
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitOrbiBoolean(MiniJavaParser.OrbiBooleanContext ctx) { return OurConstants.booleanType; }
+	@Override public Integer visitOrbiBoolean(MiniJavaParser.OrbiBooleanContext ctx) {
+		visitChildren(ctx);
+		return OurConstants.booleanType;
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitNotBoolean(MiniJavaParser.NotBooleanContext ctx) { return OurConstants.booleanType;}
+	@Override public Integer visitNotBoolean(MiniJavaParser.NotBooleanContext ctx) {
+		visitChildren(ctx);
+		return OurConstants.booleanType;
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitAndibBoolean(MiniJavaParser.AndibBooleanContext ctx) { return OurConstants.booleanType; }
+	@Override public Integer visitAndibBoolean(MiniJavaParser.AndibBooleanContext ctx) {
+		visitChildren(ctx);
+		return OurConstants.booleanType;
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitAndbiBoolean(MiniJavaParser.AndbiBooleanContext ctx) { return OurConstants.booleanType; }
+	@Override public Integer visitAndbiBoolean(MiniJavaParser.AndbiBooleanContext ctx) {
+		visitChildren(ctx);
+		return OurConstants.booleanType;
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitAndbbBoolean(MiniJavaParser.AndbbBooleanContext ctx) {  return OurConstants.booleanType; }
+	@Override public Integer visitAndbbBoolean(MiniJavaParser.AndbbBooleanContext ctx) {
+		visitChildren(ctx);
+		return OurConstants.booleanType;
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitEqualbbBoolean(MiniJavaParser.EqualbbBooleanContext ctx) {  return OurConstants.booleanType; }
+	@Override public Integer visitEqualbbBoolean(MiniJavaParser.EqualbbBooleanContext ctx) {
+		visitChildren(ctx);
+		return OurConstants.booleanType;
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitOrbbBoolean(MiniJavaParser.OrbbBooleanContext ctx) {  return OurConstants.booleanType; }
+	@Override public Integer visitOrbbBoolean(MiniJavaParser.OrbbBooleanContext ctx) {
+		visitChildren(ctx);
+		return OurConstants.booleanType;
+	}
 	/**
 	 * {@inheritDoc}
 	 *
@@ -242,42 +266,60 @@ public class OurMiniJavaBaseVisitor extends MiniJavaBaseVisitor<Integer> {
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitFalseBoolean(MiniJavaParser.FalseBooleanContext ctx) { return OurConstants.booleanType; }
+	@Override public Integer visitFalseBoolean(MiniJavaParser.FalseBooleanContext ctx) {
+		visitChildren(ctx);
+		return OurConstants.booleanType;
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitParenBoolean(MiniJavaParser.ParenBooleanContext ctx) { return OurConstants.booleanType; }
+	@Override public Integer visitParenBoolean(MiniJavaParser.ParenBooleanContext ctx) {
+		visitChildren(ctx);
+		return OurConstants.booleanType;
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitOribBoolean(MiniJavaParser.OribBooleanContext ctx) { return OurConstants.booleanType; }
+	@Override public Integer visitOribBoolean(MiniJavaParser.OribBooleanContext ctx) {
+		visitChildren(ctx);
+		return OurConstants.booleanType;
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitOriiBoolean(MiniJavaParser.OriiBooleanContext ctx) { return OurConstants.booleanType; }
+	@Override public Integer visitOriiBoolean(MiniJavaParser.OriiBooleanContext ctx) {
+		visitChildren(ctx);
+		return OurConstants.booleanType;
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitTrueBoolean(MiniJavaParser.TrueBooleanContext ctx) { return OurConstants.booleanType; }
+	@Override public Integer visitTrueBoolean(MiniJavaParser.TrueBooleanContext ctx) {
+		visitChildren(ctx);
+		return OurConstants.booleanType;
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public Integer visitEqualiiBoolean(MiniJavaParser.EqualiiBooleanContext ctx) { return OurConstants.booleanType; }
+	@Override public Integer visitEqualiiBoolean(MiniJavaParser.EqualiiBooleanContext ctx) {
+		visitChildren(ctx);
+		return OurConstants.booleanType;
+	}
 	/**
 	 * {@inheritDoc}
 	 *

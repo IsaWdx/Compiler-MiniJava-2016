@@ -18,6 +18,8 @@ public class MiniJava {
     private static List<String> rawCodes = new ArrayList<String>();
 
     public static boolean isChildClass(String parent, String child) {
+        if(parent.equals(child))
+            return true;
         String currClassName = classMap.get(child);
         while(currClassName != null && !currClassName.equals("")) {
             if(currClassName.equals(parent))
@@ -25,6 +27,13 @@ public class MiniJava {
             currClassName = classMap.get(currClassName);
         }
         return false;
+    }
+
+    public static boolean isChildClass(int parent, int child) {
+        String p, c;
+        p = numberClassMap.get(parent);
+        c = numberClassMap.get(child);
+        return isChildClass(p, c);
     }
 
     public static boolean storeReturnType(String name, Integer type) {

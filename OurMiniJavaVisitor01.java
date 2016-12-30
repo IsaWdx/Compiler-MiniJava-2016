@@ -45,6 +45,7 @@ public class OurMiniJavaVisitor01 extends OurMiniJavaBaseVisitor {
             methodSignature = methodSignature + Str2Int(children.get(i).getText(),lnumber,cnumber,methodname) + ",";
             MiniJava.addVarDeclaration(classname + "." + methodname + "." + children.get(i + 1).getText(), Str2Int(children.get(i).getText(), lnumber, cnumber, methodname));
         }
+        //System.out.println("MSig: " + methodSignature);
         if(MiniJava.storeReturnType(methodSignature, returntype) == false) {
             MiniJava.publishErrorMessage("line " + Integer.toString(lnumber) + ":" + Integer.toString(cnumber) + " 错误：类中出现相同签名的方法");
             MiniJava.publicErrorLine(lnumber, cnumber, cnumber + methodname.length());

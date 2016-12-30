@@ -65,7 +65,7 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
         Integer result = c.accept(this);
         classname = MiniJava.numberClassMap.get(result);
         if(result == null || classname == null) {
-            MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + "未定义的类名");
+            MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：未定义的类名");
             MiniJava.publicErrorLine(linenum, charnum-ctx.getChild(0).getText().length()-1,charnum-1 );
             return OurConstants.illegalType;
         }
@@ -76,20 +76,72 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
             c = ctx.getChild(i);
             result = c.accept(this);
             if (result == null) {
-                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + "未定义的方法形参");
+                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：未定义的方法形参");
                 MiniJava.publicErrorLine(linenum, charnum, charnum + classname.length());
                 return OurConstants.illegalType;
             }
             methodSignature += result + ",";
         }
         if (MiniJava.returnTypeMap.get(methodSignature) == null) {
-            MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + "未定义的方法" + classname);
+            // 遍历所有可能的包含父类的 function 签名
+            for(String funcSig : MiniJava.returnTypeMap.keySet()) {
+                if(parentCheck(funcSig, methodSignature))
+                    return MiniJava.returnTypeMap.get(funcSig);
+            }
+            //
+            //System.out.println("ErrSig: " + methodSignature);
+            MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：" + classname + "中未定义的方法");
             MiniJava.publicErrorLine(linenum, charnum, charnum + classname.length());
             return OurConstants.illegalType;
         } else {
             returntype = MiniJava.returnTypeMap.get(methodSignature);
         }
         return returntype;
+    }
+
+    boolean parentCheck(String sig1, String sig2) {
+        if(!(sameParaNum(sig1, sig2) && sameClassAndName(sig1, sig2)))
+            return false;
+        String[] splitted1, splitted2;
+        splitted1 = sig1.split(",");
+        splitted2 = sig2.split(",");
+        if(splitted1.length == 1) {
+            boolean flag1, flag2;
+            flag1 = (splitted1[0].indexOf('(') == (splitted1[0].length()-1));
+            flag2 = (splitted2[0].indexOf('(') == (splitted2[0].length()-1));
+            if(flag1 == true && flag2 == true)
+                return true;
+            if(flag1 != flag2)
+                return false;
+        }
+        splitted1[0] = splitted1[0].substring(splitted1[0].indexOf('(')+1, splitted1[0].length());
+        splitted2[0] = splitted2[0].substring(splitted2[0].indexOf('(')+1, splitted2[0].length());
+        for(int i = 0; i < splitted1.length; i++) {
+            if(!MiniJava.isChildClass(Integer.parseInt(splitted1[i]), Integer.parseInt(splitted2[i])))
+                return false;
+        }
+        return true;
+    }
+
+    boolean sameParaNum(String sig1, String sig2) {
+        String[] result1, result2;
+        result1 = sig1.split(",");
+        result2 = sig2.split(",");
+        // for debug only
+        //for(int i = 0; i < result1.length; i++) {
+        //    System.out.println(result1[i]);
+        //}
+        return (result1.length == result2.length);
+    }
+
+    boolean sameClassAndName(String sig1, String sig2) {
+        int bracket1, bracket2;
+        bracket1 = sig1.indexOf('(');
+        bracket2 = sig2.indexOf('(');
+        String name1, name2;
+        name1 = sig1.substring(0, bracket1);
+        name2 = sig2.substring(0, bracket2);
+        return name1.equals(name2);
     }
 
     @Override public Integer visitThisInt(MiniJavaParser.ThisIntContext ctx) {
@@ -174,7 +226,8 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
         int charnum = ctx.identifier().getStart().getCharPositionInLine();
         String varname = ctx.identifier().getText();
         String typename = ctx.type().getText();
-        // depth为2为class中的成员变量，为3则为func中的变量
+        // depricate，无需做此检查
+        /*
         if (ctx.getParent().depth() == 3) {
             String classname = ctx.getParent().getParent().getChild(1).getText();
             if(MiniJava.isChildClass(classname, typename)) {
@@ -188,6 +241,7 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
                 MiniJava.publicErrorLine(linenum, charnum, charnum + varname.length());
             }
         }
+        */
         return OurMiniJavaVisitor01.Str2Int(ctx.type().getText(), linenum, charnum, "");
     }
 
@@ -272,7 +326,11 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
         String methodname = currCtx.getParent().getChild(2).getText();
         int leftType;
         if(MiniJava.getVarType(classname + "." + methodname + "." + ctx.identifier().getText()) == null) {
-            leftType = MiniJava.getVarType(classname + "." + ctx.identifier().getText());
+            try {
+                leftType = MiniJava.getVarType(classname + "." + ctx.identifier().getText());
+            } catch(NullPointerException e) {
+                leftType = OurConstants.illegalType;
+            }
         } else {
             leftType = MiniJava.getVarType(classname + "." + methodname + "." + ctx.identifier().getText());
         }
