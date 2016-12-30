@@ -17,6 +17,7 @@ class CHILD extends BS {
 
 class BS{
     int[] number ;
+	int[] number ;
     int size ;
 	//CHILD hehe ;
 

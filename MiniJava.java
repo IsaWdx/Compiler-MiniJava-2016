@@ -8,8 +8,6 @@ import java.util.*;
 
 public class MiniJava {
     private static boolean hasError = false;
-    //TODO: If there exists an error in parser/lexer, stop the program first
-    //During first round, store any type as integer as shown in Ourconstants class
     //Assign each identifier with a number. when>=4, these are class identifier. 0,1,2,3, arew consistant with Ourconstants
     public static Map<String, Integer> typeMap = new HashMap<String, Integer>();//variable
     public static Map<String, Integer> returnTypeMap = new HashMap<String, Integer>();//method
@@ -85,16 +83,23 @@ public class MiniJava {
         System.err.println(message);
     }
     public static void main(String[] args) throws Exception {
-        String inputfilename = "/Users/xuan/Compiler-MiniJava-2016/binarysearch.txt";
-        //String inputfilename = "D:\\Study\\Coursera\\scala\\compiler\\src\\factorial.txt";
-        //String inputfilename = "/Users/xuan/Documents/Compiler-MiniJava-2016/bubblesort.txt";
+        if(args.length < 1) {
+            System.out.println("Usage: java MiniJava path/to/your/file (-c)");
+            System.out.println("Have a good day :)");
+            System.out.println();
+            return;
+        }
+        String inputfilename = args[0];
+        boolean cont = false;
+        if(args.length > 1)
+            if(args[1].equals("-c"))
+                cont = true;
         // read the whole file line by line in advance
         Scanner _s = new Scanner( new FileInputStream(inputfilename) );
         while(_s.hasNextLine()) {
             rawCodes.add(_s.nextLine());
         }
         //
-        //FileInputStream text = new FileInputStream("D:\\Study\\compiler\\src\\Factorial.txt");
         FileInputStream text = new FileInputStream(inputfilename);
         ANTLRInputStream input = new ANTLRInputStream(text);
         MiniJavaLexer lexer = new MiniJavaLexer(input);
@@ -106,16 +111,16 @@ public class MiniJava {
         //
         OurMiniJavaVisitor00 v0 = new OurMiniJavaVisitor00();
         v0.visit(tree);
-        if(hasError) {
-            System.err.println("请先解决以上问题");
+        if(hasError && !cont) {
+            System.err.println("请解决以上问题");
             return;
         }
         //
         OurMiniJavaVisitor01 v1 = new OurMiniJavaVisitor01();
         v1.visit(tree);
         //
-        if(hasError) {
-            System.err.println("请先解决以上问题");
+        if(hasError && !cont) {
+            System.err.println("请解决以上问题");
             return;
         }
         //
@@ -123,7 +128,7 @@ public class MiniJava {
         v2.visit(tree);
 
         if(hasError) {
-            System.err.println("请先解决以上问题");
+            System.err.println("请解决以上问题");
             return;
         }
         org.antlr.v4.gui.Trees.inspect(tree, parser);
