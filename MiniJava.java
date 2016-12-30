@@ -100,6 +100,8 @@ public class MiniJava {
         MiniJavaLexer lexer = new MiniJavaLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         MiniJavaParser parser = new MiniJavaParser(tokens);
+        parser.removeErrorListeners();
+        parser.addErrorListener(new UnderlineListener());
         ParseTree tree = parser.goal();
         //
         OurMiniJavaVisitor00 v0 = new OurMiniJavaVisitor00();
