@@ -337,7 +337,7 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
         if(leftType != rightType) {
             int linenum = ctx.identifier().getStart().getLine();
             int charnum = ctx.identifier().getStart().getCharPositionInLine();
-            MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：赋值类型不匹配");
+            MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：赋值类型不匹配 或 式中存在未声明变量");
             MiniJava.publicErrorLine(linenum, charnum, charnum + ctx.identifier().getText().length());
             //System.out.println(leftType);
             //System.out.println(rightType);
