@@ -24,7 +24,5 @@ gist: https://gist.github.com/taineleau/35e5de53e14770738ff4cf30cdce238d
 * Check if there exists a child class instance as a member in a parent class, but the child could have a reference to its parent as a member var.
 * 检查了赋值时等式两边类型不匹配的问题
 * 运算（加减乘除）的类型检查
-
-### TODO
 * 数组下标的类型检查
 
