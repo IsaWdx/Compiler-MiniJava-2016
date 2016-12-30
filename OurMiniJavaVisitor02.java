@@ -192,6 +192,47 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
     }
 
     @Override
+    public Integer visitArrayInt(MiniJavaParser.ArrayIntContext ctx) {
+        List<ParserRuleContext> res = ctx.getRuleContexts(new MiniJavaParser.IntexpressionContext().getClass());
+        if(res.size() == 2) {   // 如果不是有两个Intexpression的情形（比如其中的任意个被替换成了Booleanexpression），ANTLR会处理这种不匹配
+            int type1 = visit(ctx.intexpression(0));
+            int type2 = visit(ctx.intexpression(1));
+            if(type1 != OurConstants.arrayType) {
+                int linenum = ctx.intexpression(0).getStart().getLine();
+                int charnum = ctx.intexpression(0).getStart().getCharPositionInLine();
+                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：MiniJava中不可能出现int类型以外的数组");
+                MiniJava.publicErrorLine(linenum, charnum, charnum + ctx.intexpression(0).getText().length());
+            }
+            if(type2 != OurConstants.intType) {
+                int linenum = ctx.intexpression(1).getStart().getLine();
+                int charnum = ctx.intexpression(1).getStart().getCharPositionInLine();
+                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：数组下标只能是整数类型");
+                MiniJava.publicErrorLine(linenum, charnum, charnum + ctx.intexpression(1).getText().length());
+            }
+        } else {
+            visitChildren(ctx);
+        }
+        return  OurConstants.intType;
+    }
+
+    @Override
+    public Integer visitNewArrayInt(MiniJavaParser.NewArrayIntContext ctx) {
+		try {
+            int type = visit(ctx.intexpression());
+            if(type != OurConstants.intType) {
+                int linenum = ctx.intexpression().getStart().getLine();
+                int charnum = ctx.intexpression().getStart().getCharPositionInLine();
+                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：数组大小只能是整数类型");
+                MiniJava.publicErrorLine(linenum, charnum, charnum + ctx.intexpression().getText().length());
+            }
+        } catch(NullPointerException e) {
+            // 交由ANTLR的默认机制来试图解决问题
+            visitChildren(ctx);
+        }
+        return OurConstants.arrayType;
+	}
+
+    @Override
     public Integer visitAssignArrayStatement(MiniJavaParser.AssignArrayStatementContext ctx) {
         //return visitChildren(ctx);
         try {
@@ -205,11 +246,8 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
             // 以下两部分虽然（暂时）不检查，但是不应该不visit
             visit(ctx.identifier());
             visit(ctx.intexpression(1));
-        } catch (NullPointerException e) {
-            int linenum = ctx.getStart().getLine();
-            int charnum = ctx.getStart().getCharPositionInLine();
-            MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：数组下标只能是整数类型");
-            MiniJava.publicErrorLine(linenum, charnum, charnum + 3);
+        } catch (NullPointerException e) {  // 如果不是有两个Intexpression的情形（比如其中的任意个被替换成了Booleanexpression），ANTLR会处理这种不匹配
+            // nothing ...
         }
         return 0;
     }
