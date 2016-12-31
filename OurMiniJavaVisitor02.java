@@ -15,13 +15,13 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
         if(type1 != OurConstants.intType) {
             int linenum = ctx.intexpression(0).getStart().getLine();
             int charnum = ctx.intexpression(0).getStart().getCharPositionInLine();
-            MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：进行运算的变量必须是整型");
+            MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 进行运算的变量必须是整型");
             MiniJava.publicErrorLine(linenum, charnum, charnum + ctx.intexpression(0).getText().length());
         }
         if(type2 != OurConstants.intType) {
             int linenum = ctx.intexpression(1).getStart().getLine();
             int charnum = ctx.intexpression(1).getStart().getCharPositionInLine();
-            MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：进行运算的变量必须是整型");
+            MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 进行运算的变量必须是整型");
             MiniJava.publicErrorLine(linenum, charnum, charnum + ctx.intexpression(1).getText().length());
         }
         return OurConstants.intType;
@@ -34,13 +34,13 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
         if(type1 != OurConstants.intType) {
             int linenum = ctx.intexpression(0).getStart().getLine();
             int charnum = ctx.intexpression(0).getStart().getCharPositionInLine();
-            MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：进行运算的变量必须是整型");
+            MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 进行运算的变量必须是整型");
             MiniJava.publicErrorLine(linenum, charnum, charnum + ctx.intexpression(0).getText().length());
         }
         if(type2 != OurConstants.intType) {
             int linenum = ctx.intexpression(1).getStart().getLine();
             int charnum = ctx.intexpression(1).getStart().getCharPositionInLine();
-            MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：进行运算的变量必须是整型");
+            MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 进行运算的变量必须是整型");
             MiniJava.publicErrorLine(linenum, charnum, charnum + ctx.intexpression(1).getText().length());
         }
         return OurConstants.intType;
@@ -65,7 +65,7 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
         Integer result = c.accept(this);
         classname = MiniJava.numberClassMap.get(result);
         if(result == null || classname == null) {
-            MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：未定义的类名");
+            MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 未定义的类名");
             MiniJava.publicErrorLine(linenum, charnum-ctx.getChild(0).getText().length()-1,charnum-1 );
             return OurConstants.illegalType;
         }
@@ -76,7 +76,7 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
             c = ctx.getChild(i);
             result = c.accept(this);
             if (result == null) {
-                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：未定义的方法形参");
+                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 未定义的方法形参");
                 MiniJava.publicErrorLine(linenum, charnum, charnum + classname.length());
                 return OurConstants.illegalType;
             }
@@ -90,7 +90,7 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
             }
             //
             //System.out.println("ErrSig: " + methodSignature);
-            MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：" + classname + "中未定义的方法");
+            MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " " + classname + "中未定义的方法");
             MiniJava.publicErrorLine(linenum, charnum, charnum + classname.length());
             return OurConstants.illegalType;
         } else {
@@ -173,7 +173,7 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
             if(MiniJava.getVarType(key)==null) {
                 key = classname + "." + varname;
                 if(MiniJava.getVarType(key)==null) {
-                    MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：未定义变量"+  varname);
+                    MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 未定义变量"+  varname);
                     MiniJava.publicErrorLine(linenum, charnum, charnum + varname.length());
                     // 临时补救措施，避免返回一个null的情形出现
                     // 返回-1会导致不能和任何现有类型匹配，报错，这是合理反应
@@ -204,7 +204,7 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
             if (MiniJava.classMap.containsKey(parent)) {
                 while(MiniJava.classMap.containsKey(parent)) {
                     if (ancesterSet.contains(parent)) {
-                        MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：循环继承");
+                        MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 循环继承");
                         MiniJava.publicErrorLine(linenum, charnum, charnum + classname.length());
                         break;
                     }
@@ -213,7 +213,7 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
                 }
             }
             else {
-                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：未定义的父类");
+                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 未定义的父类");
                 MiniJava.publicErrorLine(linenum, charnum, charnum + classname.length());
             }
         }
@@ -231,13 +231,13 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
         if (ctx.getParent().depth() == 3) {
             String classname = ctx.getParent().getParent().getChild(1).getText();
             if(MiniJava.isChildClass(classname, typename)) {
-                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：在父类中出现子类的实例");
+                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 在父类中出现子类的实例");
                 MiniJava.publicErrorLine(linenum, charnum, charnum + varname.length());
             }
         } else {
             String classname = ctx.getParent().getChild(1).getText();
             if(MiniJava.isChildClass(classname, typename)) {
-                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：在父类中出现子类的实例");
+                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 在父类中出现子类的实例");
                 MiniJava.publicErrorLine(linenum, charnum, charnum + varname.length());
             }
         }
@@ -254,13 +254,13 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
             if(type1 != OurConstants.arrayType) {
                 int linenum = ctx.intexpression(0).getStart().getLine();
                 int charnum = ctx.intexpression(0).getStart().getCharPositionInLine();
-                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：MiniJava中不可能出现int类型以外的数组");
+                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " MiniJava中不可能出现int类型以外的数组");
                 MiniJava.publicErrorLine(linenum, charnum, charnum + ctx.intexpression(0).getText().length());
             }
             if(type2 != OurConstants.intType) {
                 int linenum = ctx.intexpression(1).getStart().getLine();
                 int charnum = ctx.intexpression(1).getStart().getCharPositionInLine();
-                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：数组下标只能是整数类型");
+                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 数组下标只能是整数类型");
                 MiniJava.publicErrorLine(linenum, charnum, charnum + ctx.intexpression(1).getText().length());
             }
         } else {
@@ -276,7 +276,7 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
             if(type != OurConstants.intType) {
                 int linenum = ctx.intexpression().getStart().getLine();
                 int charnum = ctx.intexpression().getStart().getCharPositionInLine();
-                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：数组大小只能是整数类型");
+                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 数组大小只能是整数类型");
                 MiniJava.publicErrorLine(linenum, charnum, charnum + ctx.intexpression().getText().length());
             }
         } catch(NullPointerException e) {
@@ -294,7 +294,7 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
             if(indexType != OurConstants.intType) {
                 int linenum = ctx.intexpression(0).getStart().getLine();
                 int charnum = ctx.intexpression(0).getStart().getCharPositionInLine();
-                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：数组下标只能是整数类型");
+                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 数组下标只能是整数类型");
                 MiniJava.publicErrorLine(linenum, charnum, charnum + ctx.intexpression(0).getText().length());
             }
             // 以下两部分虽然（暂时）不检查，但是不应该不visit
@@ -337,7 +337,7 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
         if(leftType != rightType) {
             int linenum = ctx.identifier().getStart().getLine();
             int charnum = ctx.identifier().getStart().getCharPositionInLine();
-            MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：赋值类型不匹配 或 式中存在未声明变量");
+            MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 赋值类型不匹配（式中可能存在未声明的变量）");
             MiniJava.publicErrorLine(linenum, charnum, charnum + ctx.identifier().getText().length());
             //System.out.println(leftType);
             //System.out.println(rightType);

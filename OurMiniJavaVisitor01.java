@@ -10,7 +10,7 @@ public class OurMiniJavaVisitor01 extends OurMiniJavaBaseVisitor {
             case "boolean": return OurConstants.booleanType;
             default:
                 if(MiniJava.classNumberMap.get(type) == null) {
-                    MiniJava.publishErrorMessage("line " + Integer.toString(lnumber) + ":" + Integer.toString(cnumber) + " 错误：出现未定义的参数类型" + type);
+                    MiniJava.publishErrorMessage("line " + Integer.toString(lnumber) + ":" + Integer.toString(cnumber) + " 出现未定义的参数类型" + type);
                     MiniJava.publicErrorLine(lnumber, cnumber, cnumber + methodname.length());
                     return OurConstants.illegalType;
                 }
@@ -47,7 +47,7 @@ public class OurMiniJavaVisitor01 extends OurMiniJavaBaseVisitor {
         }
         //System.out.println("MSig: " + methodSignature);
         if(MiniJava.storeReturnType(methodSignature, returntype) == false) {
-            MiniJava.publishErrorMessage("line " + Integer.toString(lnumber) + ":" + Integer.toString(cnumber) + " 错误：类中出现相同签名的方法");
+            MiniJava.publishErrorMessage("line " + Integer.toString(lnumber) + ":" + Integer.toString(cnumber) + " 类中出现相同签名的方法");
             MiniJava.publicErrorLine(lnumber, cnumber, cnumber + methodname.length());
         }
         return visitChildren(ctx);
@@ -64,13 +64,13 @@ public class OurMiniJavaVisitor01 extends OurMiniJavaBaseVisitor {
             String classname = ctx.getParent().getParent().getChild(1).getText();
             String methodname = ctx.getParent().getChild(2).getText();
             if (MiniJava.addVarDeclaration(classname + "." + methodname + "." + varname, type) == false) {
-                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：重复定义变量");
+                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 重复定义变量");
                 MiniJava.publicErrorLine(linenum, charnum, charnum + varname.length());
             }
         } else {
             String classname = ctx.getParent().getChild(1).getText();
             if (MiniJava.addVarDeclaration(classname + "." + varname, type) == false) {
-                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：重复定义变量");
+                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 重复定义变量");
                 MiniJava.publicErrorLine(linenum, charnum, charnum + varname.length());
             }
         }

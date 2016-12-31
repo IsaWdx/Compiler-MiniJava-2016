@@ -14,7 +14,7 @@ public class OurMiniJavaVisitor00 extends OurMiniJavaBaseVisitor {
         int linenum = ctx.identifier(0).getStart().getLine();
         int charnum = ctx.identifier(0).getStart().getCharPositionInLine();
         if(MiniJava.addClassDeclaration(classname, parent) == false) {
-            MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 错误：重名的类");
+            MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 重名的类");
             MiniJava.publicErrorLine(linenum, charnum, charnum + classname.length());
         }
         return visitChildren(ctx);

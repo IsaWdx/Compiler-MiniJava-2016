@@ -85,7 +85,7 @@ public class OurMiniJavaBaseVisitor extends MiniJavaBaseVisitor<Integer> {
 	 */
 	@Override public Integer visitLengthInt(MiniJavaParser.LengthIntContext ctx) {
 		visitChildren(ctx);
-		return  OurConstants.intType;
+		return OurConstants.intType;
 	}
 	/**
 	 * {@inheritDoc}
