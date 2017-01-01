@@ -75,6 +75,6 @@ public class OurMiniJavaVisitor01 extends OurMiniJavaBaseVisitor {
             }
         }
 
-        return type;
+        return visitChildren(ctx);
     }
 }
