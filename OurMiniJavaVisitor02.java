@@ -28,6 +28,43 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
 	}
 
     @Override
+    public Integer visitLengthInt(MiniJavaParser.LengthIntContext ctx) {
+        String varname = ctx.getChild(0).getText();
+        String key = "";
+        ParserRuleContext parent = ctx.getParent();
+        int linenum = ctx.identifier().getStart().getLine();
+        int charnum = ctx.identifier().getStart().getCharPositionInLine();
+        //先检查是否函数中变量，再检查是否类中变量
+        while(parent.depth() >=4) {
+            parent = parent.getParent();
+        }
+        if(parent.depth() == 3) {
+            String classname = parent.getParent().getChild(1).getText();
+            String methodname = parent.getChild(2).getText();
+            key = classname + "." + methodname + "." + varname;
+            if(MiniJava.getVarType(key)==null) {
+                key = classname + "." + varname;
+                if(MiniJava.getVarType(key)==null) {
+                    MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 未定义变量"+  varname);
+                    MiniJava.publicErrorLine(linenum, charnum, charnum + varname.length());
+                    // 临时补救措施，避免返回一个null的情形出现
+                    // 返回-1会导致不能和任何现有类型匹配，报错，这是合理反应
+                    return OurConstants.illegalType;
+                }
+            }
+        }
+        Integer result = MiniJava.getVarType(key);
+
+        //System.out.println(result+"+"+ ctx.getChild(0).getText());
+        if(result != OurConstants.arrayType) {
+            //int linenum = ctx.identifier().getStart().getLine();
+            //int charnum = ctx.identifier().getStart().getCharPositionInLine();
+            MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " .length只用于int[]类型");
+            MiniJava.publicErrorLine(linenum, charnum, charnum + ctx.identifier().getText().length());
+        }
+        return OurConstants.intType;
+    }
+    @Override
     public Integer visitMulInt(MiniJavaParser.MulIntContext ctx) {
         int type1 = visit(ctx.intexpression(0));
         int type2 = visit(ctx.intexpression(1));
@@ -179,7 +216,7 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
                     MiniJava.publicErrorLine(linenum, charnum, charnum + varname.length());
                     // 临时补救措施，避免返回一个null的情形出现
                     // 返回-1会导致不能和任何现有类型匹配，报错，这是合理反应
-                    return -1;
+                    return OurConstants.illegalType;
                 }
             }
         }
@@ -340,6 +377,7 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
         if(leftType != rightType) {
             int linenum = ctx.identifier().getStart().getLine();
             int charnum = ctx.identifier().getStart().getCharPositionInLine();
+            //System.out.println(ctx.intexpression().getText()+" "+rightType);
             MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 赋值类型不匹配（式中可能存在未声明的变量）");
             MiniJava.publicErrorLine(linenum, charnum, charnum + ctx.identifier().getText().length());
             //System.out.println(leftType);
