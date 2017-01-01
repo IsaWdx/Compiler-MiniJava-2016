@@ -310,14 +310,15 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
 
     @Override
     public Integer visitAssignStatement(MiniJavaParser.AssignStatementContext ctx) {
-        int rightType = -1;
+        int rightType = OurConstants.illegalType;
         try {
             rightType = visit(ctx.intexpression());
         } catch (NullPointerException expname) {
             try {
                 rightType = visit(ctx.booleanexpression());
             } catch (Exception e) {
-                System.out.println(ctx.getText());
+                //Will not occur here
+                //System.out.println(ctx.getText());
             }
         }
         ParserRuleContext currCtx = ctx;
