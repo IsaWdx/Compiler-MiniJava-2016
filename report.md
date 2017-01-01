@@ -75,7 +75,6 @@ Auther:
 
 ## 四 AST的生成
 
-<center> <img src="./img/gen.png"></center>
 
 ANTLR是一个比较成熟的工具，[官方主页](www.antlr.org) 上介绍了 ANTLR 的安装方法，本项目参考《The Definitive ANTLR 4 Reference》。
 
@@ -228,7 +227,7 @@ MiniJavaVisitor.java 是前面提到的 Visitor 方式的抽象语法树的接口，MiniJavaBaseBa
          }
         }
 
-<img src="./img/errors.jpg">
+<img src="./img/errors.JPG">
 其中因为只有语义错误，因此ANTLR4没有高亮错误处，下图是正确的mainclass的AST图。
 <img src="./img/mainclass.png">
 
@@ -256,7 +255,7 @@ MiniJavaVisitor.java 是前面提到的 Visitor 方式的抽象语法树的接口，MiniJavaBaseBa
 * 运算（加减乘除）的类型检查
 * 数组下标的类型检查
 
-## 九 项目完成体会
+## 八、 项目完成体会
 + ANTLR 是一种方便的编译器前端开发工具。
 + 其支持 BNF 范式，使得设计词法和文法变得相对容易。
 + ANTLR 通过 LL(*) 来进行文法分析，这使它支持一定程度上的左递归文法，帮设计者解决了很多问题
