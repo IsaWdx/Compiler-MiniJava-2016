@@ -59,14 +59,16 @@ public class OurMiniJavaVisitor02 extends OurMiniJavaBaseVisitor {
         String methodSignature = "";
         int linenum = ctx.identifier().getStart().getLine();
         int charnum = ctx.identifier().getStart().getCharPositionInLine();
+        //System.out.println(ctx.getChild(0).getText());
         //visit first child, it may be a child node instead of pure identifier, like new BBS()
         //result stores the return type
         ParseTree c = ctx.getChild(0);
         Integer result = c.accept(this);
         classname = MiniJava.numberClassMap.get(result);
         if(result == null || classname == null) {
-            MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 未定义的类名");
-            MiniJava.publicErrorLine(linenum, charnum-ctx.getChild(0).getText().length()-1,charnum-1 );
+            //MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 未定义的类名");
+            //MiniJava.publicErrorLine(linenum, charnum-ctx.getChild(0).getText().length()-1,charnum-1 );
+            // Here return but no error message(if the classname is null, the undefined variable should be already checked)
             return OurConstants.illegalType;
         }
         Integer count = ctx.getChildCount();
