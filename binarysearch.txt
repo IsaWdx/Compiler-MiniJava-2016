@@ -46,7 +46,7 @@ class BS{
 	if (this.Search(50)) System.out.println(1) ;
 	else System.out.println(0) ;
 
-	return 999 ;
+	return number ;
     }
 
 

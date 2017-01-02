@@ -5,14 +5,35 @@ class Factorial{
 }
 
 class Fac {
-
     public int ComputeFac(int num){
         int num_aux ;
-        if (num < 1)
-            num_aux = 1 ;
-        else
-            num_aux = num * (this.ComputeFac(num-1)) ;
+        if (num < 1) num_aux = 1 ;
+        else num_aux = num * (this.ComputeFac(num-1)) ;
         return num_aux ;
     }
-
+}
+class Fat {
+    int x;
+    int y;
+    int[] xarray;
+    public int check_x(int num) {
+        x = 100; // Can reach out to x.
+        return x;
+    }
+    public int ComputeFat(int num){ // Actually return int[]
+        int z;
+        int z;// Duplicate
+        int x; // x in this method
+        Fac f;
+        Fat fake;
+        f = new Fac();
+        x = 100;
+        y = 100!=5+5; // Type are inconsistent when using right priority for != and +
+        x = f.ComputeFac(num);
+        x = f.ComputeFat(num); // No such method
+        y = fake.ComputeFac(num);
+        z = x.length; // .length only applicable to array
+        y = xarray.length;
+        return xarray;
+ }
 }
