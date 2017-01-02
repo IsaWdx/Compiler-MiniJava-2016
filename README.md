@@ -4,7 +4,9 @@ Compiler course 2016
 gist: https://gist.github.com/taineleau/35e5de53e14770738ff4cf30cdce238d
 
 ### Usage: 
+
 javac *.java
+
 java MiniJava path/to/your/file (-c)
 
 

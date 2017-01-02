@@ -69,7 +69,7 @@ Auther:
 + ANTLR 语言识别的一个工具 (ANother Tool for Language Recognition ) 是一种语言工具，它提供了一个框架，可以通过包含 Java, C++, 或 C# 动作（action）的语法描述来构造语言识别器，编译器和解释器。 计算机语言的解析已经变成了一种非常普遍的工作，在这方面的理论和工具经过近 40 年的发展已经相当成熟，使用 Antlr 等识别工具来识别，解析，构造编译器比手工编程更加容易，同时开发的程序也更易于维护。
 + 和大多数语言识别工具一样，Antlr 使用上下文无关文法描述语言。最新的 Antlr 是一个基于 LL(*) 的语言识别器。在 Antlr 中通过解析用户自定义的上下文无关文法，自动生成词法分析器 (Lexer)、语法分析器 (Parser) 和树分析器 (Tree Parser)。
 
-<center> <img src="./img/overview.png"></center>
+<center> <img src="./src/img/overview.png"></center>
 
 如上图所示，把源文件转化成AST，需要一个 Lexer 和 Parser。Lexer 把源文件读入，分成 token 序列。然后 Parser 读入 Lexer 产生的 tokens 生成 AST。在 ANTLR 提供了 Lisenter 和 Visitor 两种方式来遍历抽象语法树。`本项目主要利用将利用Visitor接口遍历抽象语法树，实现以上功能`。
 
@@ -177,7 +177,7 @@ MiniJavaVisitor.java 是前面提到的 Visitor 方式的抽象语法树的接�
 + 为了便于检查类型，将expression分为intexpression及booleanexpression两种，其中booleanexpression都为严格布尔类型。
 + 操作符具有优先级语义，对 expression 进行了适当展开，利用规则在语法文件中的先后顺序确定先后顺序，使得计算有正确的结合性，如：  1 * 2 - 3 * 4 - (5 - 6) * 7 < 8 / 9 / 10 && 11 - 12 - 13 < 14 - 100
 
-<img src="./img/expr.png">
+<img src="./src/img/expr.png">
 
 ### 六 AST及语义错误测试
 
@@ -227,11 +227,11 @@ MiniJavaVisitor.java 是前面提到的 Visitor 方式的抽象语法树的接�
          }
         }
 
-<img src="./img/errors.JPG">
+<img src="./src/img/errors.JPG">
 
 其中因为只有语义错误，因此ANTLR4没有高亮错误处，下图是正确的Factorial类的AST图。
 
-<img src="./img/mainclass.png">
+<img src="./src/img/mainclass.png">
 
 ### 七 检查过程
 #### MiniJava.java为主类，存储了变量和类型表。通过Visitor三次遍历AST，进行语法语义检查，并画图。另外还有一些报错等辅助代码。主要代码：
