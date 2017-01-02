@@ -182,8 +182,8 @@ MiniJavaVisitor.java 是前面提到的 Visitor 方式的抽象语法树的接�
 ### 六 AST及语义错误测试
 
 #### Usage: java MiniJava path/to/your/file (-c)
-#### 当使用参数-c时，即便某轮检查出错仍然进行下一轮检查画出AST，反之不进行继续检查，当无错误时画出AST.
-
+#### 当使用参数-c时，即便某轮检查出错仍然进行下一轮检查，反之不进行继续检查。当无错误时画出AST.
+#### 在testProgram文件夹下给出了很多测试文件及其报错信息（JPG截图）；若无错误，给出了AST（PNG图）。下面是一个示例。
 ### 结果示例 1 src/testProgram/Factorial.txt
         class Factorial{
             public static void main(String[] a){
