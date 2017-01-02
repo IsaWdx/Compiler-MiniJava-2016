@@ -13,7 +13,7 @@ Auther:
 * 五 语法改动说明
 * 六 AST及语义错误测试
 * 七 检查过程说明
-* 八 实现过程中的感想
+* 八 实现过程中的思考
 * 九 项目完成体会
 
 
@@ -276,8 +276,9 @@ MiniJavaVisitor.java 是前面提到的 Visitor 方式的抽象语法树的接�
 * 类信息存储在classMap, numberClassMap, classNumberMap, totalClassNumber中。
 * 检查重复定义类。
 * 主要代码：
-    @Override
-    public Integer visitClassDeclaration(MiniJavaParser.ClassDeclarationContext ctx) {
+   
+        @Override
+        public Integer  visitClassDeclaration(MiniJavaParser.ClassDeclarationContext ctx) {
         String classname = ctx.getChild(1).getText();
         String parent = "";
 
@@ -299,40 +300,40 @@ MiniJavaVisitor.java 是前面提到的 Visitor 方式的抽象语法树的接�
 * 检查循环继承和继承不存在的类。
 * 例如记录方法声明：
 
-    @Override
-    public Integer visitMethodDeclaration(MiniJavaParser.MethodDeclarationContext ctx) {
-        // 第一轮记录return type，第二轮验证 & more
-        int lnumber = ctx.identifier(0).getStart().getLine();
-        int cnumber = ctx.identifier(0).getStart().getCharPositionInLine();
-        String methodname = ctx.identifier(0).getStart().getText();
-        Integer returntype = Str2Int(ctx.type(0).getText(),lnumber,cnumber, methodname,true);
-        String classname = ctx.getParent().getChild(1).getText();
-        String methodSignature = classname + "." + methodname + "(";
-        List<ParseTree> children = ctx.children;
-        int beginfrom = 0, endbefore = 0;
-        for(int i = 0; i < children.size(); i++) {
-            if(children.get(i).getText().equals("(")) {
-                beginfrom = i + 1;
-                break;
+            @Override
+            public Integer visitMethodDeclaration(MiniJavaParser.MethodDeclarationContext ctx) {
+                // 第一轮记录return type，第二轮验证 & more
+                int lnumber = ctx.identifier(0).getStart().getLine();
+                int cnumber = ctx.identifier(0).getStart().getCharPositionInLine();
+                String methodname = ctx.identifier(0).getStart().getText();
+                Integer returntype = Str2Int(ctx.type(0).getText(),lnumber,cnumber, methodname,true);
+                String classname = ctx.getParent().getChild(1).getText();
+                String methodSignature = classname + "." + methodname + "(";
+                List<ParseTree> children = ctx.children;
+                int beginfrom = 0, endbefore = 0;
+                for(int i = 0; i < children.size(); i++) {
+                    if(children.get(i).getText().equals("(")) {
+                        beginfrom = i + 1;
+                        break;
+                    }
+                }
+                for(int i = 0; i < children.size(); i++) {
+                    if(children.get(i).getText().equals(")")) {
+                        endbefore = i;
+                        break;
+                    }
+                }
+                for(int i = beginfrom; i < endbefore; i = i + 3) {
+                    methodSignature = methodSignature + Str2Int(children.get(i).getText(),lnumber,cnumber,methodname, true) + ",";
+                    MiniJava.addVarDeclaration(classname + "." + methodname + "." + children.get(i + 1).getText(), Str2Int(children.get(i).getText(), lnumber, cnumber, methodname, true));
+                }
+                //System.out.println("MSig: " + methodSignature);
+                if(MiniJava.storeReturnType(methodSignature, returntype) == false) {
+                    MiniJava.publishErrorMessage("line " + Integer.toString(lnumber) + ":" + Integer.toString(cnumber) + " 类中出现相同签名的方法");
+                    MiniJava.publicErrorLine(lnumber, cnumber, cnumber + methodname.length());
+                }
+                return visitChildren(ctx);
             }
-        }
-        for(int i = 0; i < children.size(); i++) {
-            if(children.get(i).getText().equals(")")) {
-                endbefore = i;
-                break;
-            }
-        }
-        for(int i = beginfrom; i < endbefore; i = i + 3) {
-            methodSignature = methodSignature + Str2Int(children.get(i).getText(),lnumber,cnumber,methodname, true) + ",";
-            MiniJava.addVarDeclaration(classname + "." + methodname + "." + children.get(i + 1).getText(), Str2Int(children.get(i).getText(), lnumber, cnumber, methodname, true));
-        }
-        //System.out.println("MSig: " + methodSignature);
-        if(MiniJava.storeReturnType(methodSignature, returntype) == false) {
-            MiniJava.publishErrorMessage("line " + Integer.toString(lnumber) + ":" + Integer.toString(cnumber) + " 类中出现相同签名的方法");
-            MiniJava.publicErrorLine(lnumber, cnumber, cnumber + methodname.length());
-        }
-        return visitChildren(ctx);
-    }
 
 
 
@@ -348,64 +349,61 @@ MiniJavaVisitor.java 是前面提到的 Visitor 方式的抽象语法树的接�
 * 数组下标的类型检查
 * 例如推导方法调用返回值并检查正确性：
 
-    @Override public Integer visitMethodInt(MiniJavaParser.MethodIntContext ctx) {
-        int returntype = OurConstants.illegalType;
-        String classname = "";
-        String methodname = "";
-        String methodSignature = "";
-        int linenum = ctx.identifier().getStart().getLine();
-        int charnum = ctx.identifier().getStart().getCharPositionInLine();
-        //System.out.println(ctx.getChild(0).getText());
-        //visit first child, it may be a child node instead of pure identifier, like new BBS()
-        //result stores the return type
-        ParseTree c = ctx.getChild(0);
-        Integer result = c.accept(this);
-        classname = MiniJava.numberClassMap.get(result);
-        if(result == null || classname == null) {
-            return OurConstants.illegalType;
-        }
-        Integer count = ctx.getChildCount();
-        methodname = ctx.getChild(2).getText();
-        methodSignature = classname + "." + methodname + "(";
-        for (int i = 4; i < count - 1; i = i + 2) {
-            c = ctx.getChild(i);
-            result = c.accept(this);
-            if (result == null) {
-                MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 未定义的方法形参");
-                MiniJava.publicErrorLine(linenum, charnum, charnum + classname.length());
-                return OurConstants.illegalType;
+            @Override public Integer visitMethodInt(MiniJavaParser.MethodIntContext ctx) {
+                int returntype = OurConstants.illegalType;
+                String classname = "";
+                String methodname = "";
+                String methodSignature = "";
+                int linenum = ctx.identifier().getStart().getLine();
+                int charnum = ctx.identifier().getStart().getCharPositionInLine();
+                //System.out.println(ctx.getChild(0).getText());
+                //visit first child, it may be a child node instead of pure identifier, like new BBS()
+                //result stores the return type
+                ParseTree c = ctx.getChild(0);
+                Integer result = c.accept(this);
+                classname = MiniJava.numberClassMap.get(result);
+                if(result == null || classname == null) {
+                    return OurConstants.illegalType;
+                }
+                Integer count = ctx.getChildCount();
+                methodname = ctx.getChild(2).getText();
+                methodSignature = classname + "." + methodname + "(";
+                for (int i = 4; i < count - 1; i = i + 2) {
+                    c = ctx.getChild(i);
+                    result = c.accept(this);
+                    if (result == null) {
+                        MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " 未定义的方法形参");
+                        MiniJava.publicErrorLine(linenum, charnum, charnum + classname.length());
+                        return OurConstants.illegalType;
+                    }
+                    methodSignature += result + ",";
+                }
+                if (MiniJava.returnTypeMap.get(methodSignature) == null) {
+                    // 遍历所有可能的包含父类的 function 签名
+                    for(String funcSig : MiniJava.returnTypeMap.keySet()) {
+                        if(parentCheck(funcSig, methodSignature))
+                            return MiniJava.returnTypeMap.get(funcSig);
+                    }
+                    //
+                    MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " " + classname + "中未定义的方法");
+                    MiniJava.publicErrorLine(linenum, charnum, charnum + methodname.length());
+                    return OurConstants.illegalType;
+                } else {
+                    returntype = MiniJava.returnTypeMap.get(methodSignature);
+                }
+                return returntype;
             }
-            methodSignature += result + ",";
-        }
-        if (MiniJava.returnTypeMap.get(methodSignature) == null) {
-            // 遍历所有可能的包含父类的 function 签名
-            for(String funcSig : MiniJava.returnTypeMap.keySet()) {
-                if(parentCheck(funcSig, methodSignature))
-                    return MiniJava.returnTypeMap.get(funcSig);
-            }
-            //
-            MiniJava.publishErrorMessage("line " + Integer.toString(linenum) + ":" + Integer.toString(charnum) + " " + classname + "中未定义的方法");
-            MiniJava.publicErrorLine(linenum, charnum, charnum + methodname.length());
-            return OurConstants.illegalType;
-        } else {
-            returntype = MiniJava.returnTypeMap.get(methodSignature);
-        }
-        return returntype;
-    }
 
 ### 八、 实现过程中的思考
 
 + 为什么要遍历三轮？
     本来试图利用两轮遍历进行语义检查。在本来的设计中，在第一轮中，记录变量方法和类的声明，在第二轮中进行类型推导、变量存在性检查、方法调用检查。
     但是在实际操作过程中，发现需要先在这两轮前加一轮，记录所有的class，以确定整个程序中存在的所有类型。
-
     在上面Factorial的类中，存在类型有int, int[], boolean, 以及用identifier来描述的类型： Fat, Fac, Factorial。如果不预先记录这些合法的identifier类型，
-    记录变量、方法参数时，难以确定他们使用的类型是否是合法的。如果只使用两轮遍历，比如若第一遍遍历遇到新建变量Fas fs;，只能记录fs的类型是Fas，对这个类型的合法性检查
-    将会推迟到下一轮，使用变量fs的地方在类型检查会产生不必要的麻烦。
+    记录变量、方法参数时，难以确定他们使用的类型是否是合法的。如果只使用两轮遍历，比如若第一遍遍历遇到新建变量Fas fs;，只能记录fs的类型是Fas，对这个类型的合法性检查   将会推迟到下一轮，使用变量fs的地方在类型检查会产生不必要的麻烦。
 
 + 重载Visitor接口时的注意事项？
-    在MiniJavaBaseVisitor.java中，默认会在visit每个node之时递归的向下visit它的子节点。在实现的过程中，容易在某个node实现了一些检查之后，忘记访问某些子节点，导致
-    下层节点无法被访问。在本项目中，通过仔细查找修正了所有未被visit的子节点遍历。
+    在MiniJavaBaseVisitor.java中，默认会在visit每个node之时递归的向下visit它的子节点。在实现的过程中，容易在某个node实现了一些检查之后，忘记访问某些子节点，导致下层节点无法被访问。在本项目中，通过仔细查找修正了所有未被visit的子节点遍历。
 
 + 用this和对象调用方法的异同？
     MiniJava除了主函数外不存在static函数，因此只能通过this及对象来调用方法。因此对this的类型推导应该以它所处的类名字为准。对象的类型通过记录的变量类型表来查找。
@@ -415,7 +413,7 @@ MiniJavaVisitor.java 是前面提到的 Visitor 方式的抽象语法树的接�
     因此在本编译器中去掉了这一类检查。另外，在Java中，子类对象也可以传给使用父类形参的方法，在我们的编译器中也实现了这种功能。
 
 
-### 八、 项目完成体会
+### 九、 项目完成体会
 
 + ANTLR 是一种方便的编译器前端开发工具， 其支持 BNF 范式，使得设计词法和文法变得相对容易。通过 LL(*) 来进行文法分析，这使它支持一定程度上的左递归文法，帮设计者解决了很多问题。
 ANTLR 支持一定程度上的歧义文法，在遇到歧义时按照先后定义顺序的优先级处理，非常方便。ANTLR 的词法分析和语法分析有默认的错误检测和处理方式，减少了工作量。
