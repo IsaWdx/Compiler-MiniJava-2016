@@ -9,6 +9,13 @@ javac *.java
 
 java MiniJava path/to/your/file (-c)
 
+### 运行环境及依赖:
+
+已测试：macOS 10.12、Windows10 64-bit
+
+理论可运行但未测试：Linux
+
+依赖于ANTLR4，并建议运行于JavaSE 7及以上环境
 
 ### Visitor三次遍历
 
